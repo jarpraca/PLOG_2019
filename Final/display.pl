@@ -1,10 +1,10 @@
-draw_column_letters :- write('        a     b     c     d   \n').
+draw_column_letters :- write('        a      b      c      d\n').
 
 write_row_number(N):-
 	write('  '),
 	print(N),
 	write('  ').
-draw_separator:- write('     -------------------------\n').
+draw_separator:- write('      ______ ______ ______ ______\n').
 draw_line(R, C) :-
 	C < 5,
 	write('  '),
@@ -12,17 +12,18 @@ draw_line(R, C) :-
 	board(R, D, P),
 	getPiece(P, X),
 	print(X),
-	write(' |'),
+	write('  |'),
 	T is C+1,
 	draw_line(R, T).
 draw_line(_, 5).
 draw_board(R) :-
 	R < 5,
+	write('     |      |      |      |      |\n'),
 	write_row_number(R),
 	write('|'),
 	draw_line(R, 1),
-	write('\n'),
-	draw_separator,
+	write('\n     |______|______|______|______|\n'),
+	/*draw_separator,*/
 	X is R+1,
 	draw_board(X).
 draw_board(5).
