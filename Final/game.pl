@@ -6,7 +6,7 @@ switchPlayer(Player,NextPlayer):-
 
 play_round(Player):-
 	display_game(Player),
-	format("~nPlayer ~d, what piece do you wanna place? ", [Player]),
+	format("~nPlayer ~d, what piece do you wanna place? (use lower case) ", [Player]),
 	read(PieceSelected),
 	verifyPiece(PieceSelected, Player, Res1),
 	(Res1==1 -> 
