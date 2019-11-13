@@ -49,3 +49,10 @@ display_game(Player) :-
 	draw_separator,
 	draw_board(1),
 	draw_player(Player).
+
+displayWinner(Player) :-
+	write('  ============================='),nl,
+	write('||                             ||'),nl,
+	format("||        PLAYER ~d WON!        ||", [Player]),nl,
+	write('||                             ||'),nl,
+	write('  ============================='),nl.

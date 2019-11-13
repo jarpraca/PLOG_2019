@@ -37,8 +37,8 @@ addBoard :-
     assert(board(4,d,e)).
 
 resetPieces :-
-    retract(pieces(1, _)),
-    retract(pieces(2, _)).
+    retractall(pieces(1, _)),
+    retractall(pieces(2, _)).
 
 initialPieces :-
     assert(pieces(1, [wo,wo,wy,wy,ws,ws,wc,wc])),
@@ -85,7 +85,7 @@ getQuad(2,d,2).
 getQuad(3,a,3).
 getQuad(3,b,3).
 getQuad(4,a,3).
-getQuad(5,b,3).
+getQuad(4,b,3).
 
 getQuad(3,c,4).
 getQuad(3,d,4).

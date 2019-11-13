@@ -47,7 +47,7 @@ verifyQuad(4, Piece) :-
 	\+board(4, d, Opposite).
 
 verifyCoords(Row, Col, Piece, Res) :- 
-	((Row >= 1, Row =< 4, column(Col, _)) -> 
+	((integer(Row), Row >= 1, Row =< 4, column(Col, _)) -> 
 		(\+board(Row, Col, e) ->
 			(write('\nThis cell already has a piece!\n'), Res=0);
 			(verifyRow(Row, Piece), verifyColumn(Col, Piece), getQuad(Row, Col, Quad), verifyQuad(Quad, Piece) ->
@@ -121,9 +121,9 @@ quadToList(2, List) :-
 quadToList(3, List) :-
     board(3, a, X1),
     getShape(X1, Y1),
-	board(4, b, X2),
+	board(3, b, X2),
     getShape(X2, Y2),
-	board(3, a, X3),
+	board(4, a, X3),
     getShape(X3, Y3),
 	board(4, b, X4),
     getShape(X4, Y4),
@@ -132,9 +132,9 @@ quadToList(3, List) :-
 quadToList(4, List) :-
     board(3, c, X1),
     getShape(X1, Y1),
-	board(4, d, X2),
+	board(3, d, X2),
     getShape(X2, Y2),
-	board(3, c, X3),
+	board(4, c, X3),
     getShape(X3, Y3),
 	board(4, d, X4),
     getShape(X4, Y4),

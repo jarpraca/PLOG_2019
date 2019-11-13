@@ -20,7 +20,7 @@ play_round(Player):-
 			removePiece(PieceSelected, Player),
 			(checkWin ->
 				(display_game(Player), 
-				format("~nPlayer ~d WON!", [Player])
+				displayWinner(Player)
 				);
 				(switchPlayer(Player, NextPlayer),
 				play_round(NextPlayer))
@@ -32,7 +32,31 @@ play_round(Player):-
 		play_round(Player)
 	).
 
+reset :- 
+	(resetBoard, resetPieces);
+	(\+resetBoard, \+resetPieces).
+
 startGame :-
+	reset,
 	addBoard,
 	initialPieces,
 	play_round(1).
+
+parseOption(0).
+
+parseOption(1) :-
+	startGame.
+
+parseReplay(y) :-
+	menu.
+
+parseReplay(n).
+
+menu :-
+	displayMenu,
+	write('\nPlease choose an option: '),
+	read(Option),
+	parseOption(Option),
+	write('\nDo you want to play again? (y/n) '),
+	read(Replay),
+	parseReplay(Replay).
