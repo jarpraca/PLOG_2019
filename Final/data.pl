@@ -1,5 +1,7 @@
-:- dynamic board/3.
-
+/*:- dynamic board/3.*/
+:- dynamic board/1.
+/*:- dynamic pieces/2.*/
+/*
 resetBoard :-
     retractall(board(1,a,_)),
     retractall(board(1,b,_)),
@@ -35,6 +37,30 @@ addBoard :-
     assert(board(4,b,e)),
     assert(board(4,c,e)),
     assert(board(4,d,e)).
+*/
+resetBoard :-
+    retractall(board(_)).
+
+addBoard :- 
+    assert(board([1,cell(1,a,e), cell(1,b,e), cell(1,c,e), cell(1,d,e),
+                    cell(2,a,e), cell(2,b,e), cell(2,c,e), cell(2,d,e),
+                    cell(3,a,e), cell(3,b,e), cell(3,c,e), cell(3,d,e),
+                    cell(4,a,e), cell(4,b,e), cell(4,c,e), cell(4,d,e)])).
+
+verifyEmptyCell(Board, Row, Col) :-
+    member(cell(Row, Col, e), Board).
+
+getPiece(Board, Row, Col, Piece) :-
+    member(cell(Row, Col, Piece), Board).
+
+setPiece([Player | Board], Row, Col, Piece) :-
+    delete_one(cell(Row, Col, Piece), Board, NewBoard),
+    retract(board(_)),
+    assert(board([Player | NewBoard])).
+
+setPlayer(Board, NewPlayer) :-
+    retract(board(_)),
+    assert(board([NewPlayer | Board])).
 
 resetPieces :-
     retractall(pieces(1, _)),
@@ -43,7 +69,7 @@ resetPieces :-
 initialPieces :-
     assert(pieces(1, [wo,wo,wy,wy,ws,ws,wc,wc])),
     assert(pieces(2, [bo,bo,by,by,bs,bs,bc,bc])).
-
+/*
 setPiece(Row, Col, Piece) :-
     retract(board(Row, Col, e)),
     assert(board(Row, Col, Piece)).
@@ -51,16 +77,16 @@ setPiece(Row, Col, Piece) :-
 updatePieces(Player, NewPieces) :-
     retract(pieces(Player, _)),
     assert(pieces(Player, NewPieces)).
-
-getPiece(e, '  ').
-getPiece(by, 'BY').
-getPiece(bo, 'BO').
-getPiece(bc, 'BC').
-getPiece(bs, 'BS').
-getPiece(wy, 'WY').
-getPiece(wo, 'WO').
-getPiece(wc, 'WC').
-getPiece(ws, 'WS').
+*/
+getPieceString(e, '  ').
+getPieceString(by, 'BY').
+getPieceString(bo, 'BO').
+getPieceString(bc, 'BC').
+getPieceString(bs, 'BS').
+getPieceString(wy, 'WY').
+getPieceString(wo, 'WO').
+getPieceString(wc, 'WC').
+getPieceString(ws, 'WS').
 
 getShape(e, e).
 getShape(by, y).
