@@ -47,15 +47,13 @@ addBoard :-
                     cell(3,a,e), cell(3,b,e), cell(3,c,e), cell(3,d,e),
                     cell(4,a,e), cell(4,b,e), cell(4,c,e), cell(4,d,e)])).
 
-verifyEmptyCell(Board, Row, Col) :-
-    member(cell(Row, Col, e), Board).
-
 getPiece(Board, Row, Col, Piece) :-
     member(cell(Row, Col, Piece), Board).
 
 setPiece([Player | Board], Row, Col, Piece) :-
-    delete_one(cell(Row, Col, Piece), Board, NewBoard),
+    delete_one(cell(Row, Col, _), Board, NB),
     retract(board(_)),
+    append(NB, [cell(Row, Col, Piece)], NewBoard),
     assert(board([Player | NewBoard])).
 
 setPlayer(Board, NewPlayer) :-
@@ -73,11 +71,11 @@ initialPieces :-
 setPiece(Row, Col, Piece) :-
     retract(board(Row, Col, e)),
     assert(board(Row, Col, Piece)).
-
+*/
 updatePieces(Player, NewPieces) :-
     retract(pieces(Player, _)),
     assert(pieces(Player, NewPieces)).
-*/
+
 getPieceString(e, '  ').
 getPieceString(by, 'BY').
 getPieceString(bo, 'BO').

@@ -1,25 +1,25 @@
 switchPlayer(Board, 1, NextBoard) :-
 	setPlayer(Board, 2),
 	board(NB),
-	NextBoard is NB.
+	NextBoard = NB.
 
 switchPlayer(Board, 2, NextBoard) :-
 	setPlayer(Board, 1),
 	board(NB),
-	NextBoard is NB.
+	NextBoard = NB.
 
 move([Row, Col, Piece], [Player | Board], NewBoard) :-
     setPiece([Player | Board], Row, Col, Piece), % Nao precisa de guardar na database
     removePiece(Piece, Player),
     board(NB),
-    NewBoard is NB.
+    NewBoard = NB.
 
 readAndMove(Player, Board, NewBoard) :-
 	parsePiece(Player, Piece),
 	parseRow(Player, Row),
 	parseColumn(Player, Col),
 	(verifyMove(Board, Row, Col, Piece) ->
-		(move([Row, Col, Piece], [Player | Board], NB), NewBoard is NB);
+		(move([Row, Col, Piece], [Player | Board], NB), NewBoard = NB);
 		readAndMove(Player, Board, NewBoard)
 	).
 
@@ -31,7 +31,7 @@ play_round([Player | Board]) :-
 	display_game(Board, Player),
 	readAndMove(Player, Board, NewBoard),
 	(game_over(NewBoard, Winner) ->
-		displayWinner(Winner);
+		(drawBoard(NewBoard), displayWinner(Winner));
 		(switchPlayer(NewBoard, Player, NextBoard), play_round(NextBoard))
 	).
 
@@ -68,13 +68,17 @@ play_round(Player):-
 	).
 */
 reset :- 
-	(resetBoard, resetPieces);
-	(\+resetBoard, \+resetPieces).
+	(resetBoard ->
+		addBoard;
+		addBoard
+	),
+	(resetPieces ->
+		initialPieces;
+		initialPieces
+	).
 
 startGame :-
 	reset,
-	addBoard,
-	initialPieces,
 	board(Board),
 	play_round(Board).
 

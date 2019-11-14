@@ -13,7 +13,7 @@ drawColumn(Board, Row, Col) :-
 	column(ColLetter, Col),
 	getPiece(Board, Row, ColLetter, Piece),
 	getPieceString(Piece, String),
-	print(String),
+	write(String),
 	write('  |'),
 	NextCol is Col+1,
 	drawColumn(Board, Row, NextCol).
@@ -64,7 +64,6 @@ display_game(Board, Player) :-
 	draw_player(Player).
 
 displayWinner(Player) :-
-	drawBoard,
 	write('  ============================='),nl,
 	write('||                             ||'),nl,
 	format("||        PLAYER ~d WON!        ||", [Player]),nl,

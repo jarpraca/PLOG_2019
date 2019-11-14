@@ -80,10 +80,10 @@ verifyCoords(Row, Col, Piece, Res) :-
 
 verifyRow(Board, Row, Piece) :-
 	oppositePiece(Piece, Opposite),
-    \+getPiece(Board, Row, 1, Opposite),
-    \+getPiece(Board, Row, 2, Opposite),
-    \+getPiece(Board, Row, 3, Opposite),
-    \+getPiece(Board, Row, 4, Opposite).
+    \+getPiece(Board, Row, a, Opposite),
+    \+getPiece(Board, Row, b, Opposite),
+    \+getPiece(Board, Row, c, Opposite),
+    \+getPiece(Board, Row, d, Opposite).
 
 verifyColumn(Board, Col, Piece) :-
 	oppositePiece(Piece, Opposite),
@@ -120,17 +120,24 @@ verifyQuad(Board, 4, Piece) :-
     \+getPiece(Board, 4, c, Opposite),
     \+getPiece(Board, 4, d, Opposite).
 
+verifyEmptyCell(Board, Row, Col) :-
+    member(cell(Row, Col, e), Board).
+
 verifyMove(Board, Row, Col, Piece) :- 
     (verifyEmptyCell(Board, Row, Col) ->
+        true;
         (write('\nThis cell already has a piece!\n'), fail)
     ),
     (verifyRow(Board, Row, Piece) ->
+        true;
         (write('\nYou cannot place a piece in the same row as another piece of the same shape but different color!\n'), fail)
     ),
     (verifyColumn(Board, Col, Piece) ->
+        true;
         (write('\nYou cannot place a piece in the same column as another piece of the same shape but different color!\n'), fail)
     ),
     ((getQuad(Row, Col, Quad), verifyQuad(Board, Quad, Piece)) ->
+        true;
         (write('\nYou cannot place a piece in the same quadrant as another piece of the same shape but different color!\n'), fail)
     ).
 
