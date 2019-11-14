@@ -1,102 +1,35 @@
-switchPlayer(Board, 1, NextBoard) :-
-	setPlayer(Board, 2),
-	board(NB),
-	NextBoard = NB.
+switchPlayer(board(1, PiecesBoard, PiecesPlayer1, PiecesPlayer2), board(2, PiecesBoard, PiecesPlayer1, PiecesPlayer2)).
 
-switchPlayer(Board, 2, NextBoard) :-
-	setPlayer(Board, 1),
-	board(NB),
-	NextBoard = NB.
+switchPlayer(board(2, PiecesBoard, PiecesPlayer1, PiecesPlayer2), board(1, PiecesBoard, PiecesPlayer1, PiecesPlayer2)).
 
-move([Row, Col, Piece], [Player | Board], NewBoard) :-
-    setPiece([Player | Board], Row, Col, Piece), % Nao precisa de guardar na database
-    removePiece(Piece, Player),
-    board(NB),
-    NewBoard = NB.
+move([Row, Col, Piece], Board, NewBoard) :-
+    setPiece(Board, Row, Col, Piece, NewBoard).
 
-readAndMove(Player, Board, NewBoard) :-
-	parsePiece(Player, Piece),
-	parseRow(Player, Row),
-	parseColumn(Player, Col),
+readAndMove(Board, NewBoard) :-
+	parsePiece(Board, Piece),
+	parseRow(Board, Row),
+	parseColumn(Board, Col),
 	(verifyMove(Board, Row, Col, Piece) ->
-		(move([Row, Col, Piece], [Player | Board], NB), NewBoard = NB);
-		readAndMove(Player, Board, NewBoard)
+		(move([Row, Col, Piece], Board, NB), NewBoard = NB);
+		readAndMove(Board, NewBoard)
 	).
 
-game_over([Player | Board], Winner) :- 
+game_over(Board, Winner) :- 
     checkWin(Board),
-	Winner is Player.
+    getCurrentPlayer(Board, Player),
+	Winner = Player.
 
-play_round([Player | Board]) :-
+play_round(Board) :-
+    getCurrentPlayer(Board, Player),
 	display_game(Board, Player),
-	readAndMove(Player, Board, NewBoard),
+	readAndMove(Board, NewBoard),
 	(game_over(NewBoard, Winner) ->
 		(drawBoard(NewBoard), displayWinner(Winner));
-		(switchPlayer(NewBoard, Player, NextBoard), play_round(NextBoard))
-	).
-
-/*
-play_round(Player):-
-	board(Board),
-	display_game(Board, Player),
-	format("~nPlayer ~d, what piece do you wanna place? (use lower case) ", [Player]),
-	read(PieceSelected),
-	verifyPiece(PieceSelected, Player, Res1),
-	(Res1==1 -> 
-		(format("~nPlayer ~d, in what row do you wanna place ~w? ",  [Player, PieceSelected]),
-		read(Row),
-		format("~nPlayer ~d, in what column do you wanna place ~w? ",  [Player, PieceSelected]),
-		read(Col),
-		move([Row, Col, PieceSelected], Board, NewBoard)
-		verifyCoords(Row, Col, PieceSelected, Res2),
-		(Res2==1 -> 
-			(setPiece(Row, Col, PieceSelected),
-			removePiece(PieceSelected, Player),
-			(checkWin ->
-				(board(NewBoard),
-				displayBoard(NewBoard), 
-				displayWinner(Player)
-				);
-				(switchPlayer(Player, NextPlayer),
-				play_round(NextPlayer))
-				)
-			);
-			play_round(Player)
-		)
-		);
-		play_round(Player)
-	).
-*/
-reset :- 
-	(resetBoard ->
-		addBoard;
-		addBoard
-	),
-	(resetPieces ->
-		initialPieces;
-		initialPieces
+		(switchPlayer(NewBoard, NextBoard), play_round(NextBoard))
 	).
 
 startGame :-
-	reset,
-	board(Board),
-	play_round(Board).
-
-parseOption(0).
-
-parseOption(1) :-
-	startGame.
-
-parseReplay(y) :-
-	menu.
-
-parseReplay(n).
-
-menu :-
-	displayMenu,
-	write('\nPlease choose an option: '),
-	read(Option),
-	parseOption(Option),
-	write('\nDo you want to play again? (y/n) '),
-	read(Replay),
-	parseReplay(Replay).
+	initialPiecesBoard(InitialPiecesBoard),
+    initialPiecesPlayer1(InitialPiecesPlayer1),
+    initialPiecesPlayer2(InitialPiecesPlayer2),
+	play_round(board(1, InitialPiecesBoard, InitialPiecesPlayer1, InitialPiecesPlayer2)).

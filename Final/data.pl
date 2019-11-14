@@ -1,80 +1,45 @@
-/*:- dynamic board/3.*/
-:- dynamic board/1.
-/*:- dynamic pieces/2.*/
-/*
-resetBoard :-
-    retractall(board(1,a,_)),
-    retractall(board(1,b,_)),
-    retractall(board(1,c,_)),
-    retractall(board(1,d,_)),
-    retractall(board(2,a,_)),
-    retractall(board(2,b,_)),
-    retractall(board(2,c,_)),
-    retractall(board(2,d,_)),
-    retractall(board(3,a,_)),
-    retractall(board(3,b,_)),
-    retractall(board(3,c,_)),
-    retractall(board(3,d,_)),
-    retractall(board(4,a,_)),
-    retractall(board(4,b,_)),
-    retractall(board(4,c,_)),
-    retractall(board(4,d,_)).
+cell(_Row, _Col, _Piece).
 
-addBoard :-
-    assert(board(1,a,e)),
-    assert(board(1,b,e)),
-    assert(board(1,c,e)),
-    assert(board(1,d,e)),
-    assert(board(2,a,e)),
-    assert(board(2,b,e)),
-    assert(board(2,c,e)),
-    assert(board(2,d,e)),
-    assert(board(3,a,e)),
-    assert(board(3,b,e)),
-    assert(board(3,c,e)),
-    assert(board(3,d,e)),
-    assert(board(4,a,e)),
-    assert(board(4,b,e)),
-    assert(board(4,c,e)),
-    assert(board(4,d,e)).
-*/
-resetBoard :-
-    retractall(board(_)).
-
-addBoard :- 
-    assert(board([1,cell(1,a,e), cell(1,b,e), cell(1,c,e), cell(1,d,e),
+initialPiecesBoard([cell(1,a,e), cell(1,b,e), cell(1,c,e), cell(1,d,e),
                     cell(2,a,e), cell(2,b,e), cell(2,c,e), cell(2,d,e),
                     cell(3,a,e), cell(3,b,e), cell(3,c,e), cell(3,d,e),
-                    cell(4,a,e), cell(4,b,e), cell(4,c,e), cell(4,d,e)])).
+                    cell(4,a,e), cell(4,b,e), cell(4,c,e), cell(4,d,e)]).
+
+initialPiecesPlayer1([wo,wo,wy,wy,ws,ws,wc,wc]).
+
+initialPiecesPlayer2([bo,bo,by,by,bs,bs,bc,bc]).
+
+board(_CurrentPlayer, _PiecesBoard, _PiecesPlayer1, _PiecesPlayer2).
+
+getCurrentPlayer(board(CurrentPlayer, _PiecesBoard, _PiecesPlayer1, _PiecesPlayer2), CurrentPlayer).
+
+getPiecesPlayer(board(_CurrentPlayer, _PiecesBoard, PiecesPlayer1, _PiecesPlayer2), 1, PiecesPlayer1).
+
+getPiecesPlayer(board(_CurrentPlayer, _PiecesBoard, _PiecesPlayer1, PiecesPlayer2), 2, PiecesPlayer2).
+
+getPiecesBoard(board(_CurrentPlayer, PiecesBoard, _PiecesPlayer1, _PiecesPlayer2), PiecesBoard).
+
+setPiece(board(1, PiecesBoard, PiecesPlayer1, PiecesPlayer2), Row, Col, Piece, board(1, NewPiecesBoard, NewPiecesPlayer1, PiecesPlayer2)) :-
+    updateBoardPieces(PiecesBoard, Row, Col, Piece, NewPiecesBoard),
+    updatePlayerPieces(PiecesPlayer1, 1, Piece, NewPiecesPlayer1).
+
+setPiece(board(2, PiecesBoard, PiecesPlayer1, PiecesPlayer2), Row, Col, Piece, board(2, NewPiecesBoard, PiecesPlayer1, NewPiecesPlayer2)) :-
+    updateBoardPieces(PiecesBoard, Row, Col, Piece, NewPiecesBoard),
+    updatePlayerPieces(PiecesPlayer2, 2, Piece, NewPiecesPlayer2).
+
+updateBoardPieces(PiecesBoard, Row, Col, Piece, NewPiecesBoard) :-
+    delete_one(cell(Row, Col, e), PiecesBoard, NB),
+    append(NB, [cell(Row, Col, Piece)], NewPiecesBoard).
+
+updatePlayerPieces(PiecesPlayer1, 1, Piece, NewPiecesPlayer1) :-
+    delete_one(Piece, PiecesPlayer1, NewPiecesPlayer1).
+
+updatePlayerPieces(PiecesPlayer2, 2, Piece, NewPiecesPlayer2) :-
+    delete_one(Piece, PiecesPlayer2, NewPiecesPlayer2).
 
 getPiece(Board, Row, Col, Piece) :-
-    member(cell(Row, Col, Piece), Board).
-
-setPiece([Player | Board], Row, Col, Piece) :-
-    delete_one(cell(Row, Col, _), Board, NB),
-    retract(board(_)),
-    append(NB, [cell(Row, Col, Piece)], NewBoard),
-    assert(board([Player | NewBoard])).
-
-setPlayer(Board, NewPlayer) :-
-    retract(board(_)),
-    assert(board([NewPlayer | Board])).
-
-resetPieces :-
-    retractall(pieces(1, _)),
-    retractall(pieces(2, _)).
-
-initialPieces :-
-    assert(pieces(1, [wo,wo,wy,wy,ws,ws,wc,wc])),
-    assert(pieces(2, [bo,bo,by,by,bs,bs,bc,bc])).
-/*
-setPiece(Row, Col, Piece) :-
-    retract(board(Row, Col, e)),
-    assert(board(Row, Col, Piece)).
-*/
-updatePieces(Player, NewPieces) :-
-    retract(pieces(Player, _)),
-    assert(pieces(Player, NewPieces)).
+    getPiecesBoard(Board, PiecesBoard),
+    member(cell(Row, Col, Piece), PiecesBoard).
 
 getPieceString(e, '  ').
 getPieceString(by, 'BY').

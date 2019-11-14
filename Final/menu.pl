@@ -28,3 +28,28 @@ displayMenu :-
     write('|                                                                |'),nl,
     write('|             Developed by: Joao Praca, Lucas Ribeiro            |'),nl,
     write('|________________________________________________________________|'),nl.
+
+parseOption(0) :-
+    fail.
+
+parseOption(1) :-
+	startGame.
+
+parseReplay(y) :-
+	menu.
+
+parseReplay(n).
+
+replay :-
+    write('\nDo you want to play again? (y/n) '),
+	read(Replay),
+	parseReplay(Replay).
+
+menu :-
+	displayMenu,
+	write('\nPlease choose an option: '),
+	read(Option),
+	(parseOption(Option) ->
+        replay;
+        true
+    ).

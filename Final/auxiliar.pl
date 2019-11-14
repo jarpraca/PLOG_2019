@@ -1,82 +1,29 @@
-parsePiece(Player, Piece) :-
-    format("~nPlayer ~d, what piece do you wanna place? (use lower case) ", [Player]),
+parsePiece(Board, Piece) :-
+    getCurrentPlayer(Board, Player),
+    format("~nPlayer ~d, what piece do you want to place? ", [Player]),
 	read(PieceSelected),
-	((pieces(Player, Pieces), member(PieceSelected, Pieces)) -> 
+	((getPiecesPlayer(Board, Player, Pieces), member(PieceSelected, Pieces)) -> 
         (format("~nThe piece ~w has been selected.~n", [PieceSelected]), Piece = PieceSelected);
-        (format("~nThe piece ~w is not available.~n", [PieceSelected]), parsePiece(Player, Piece))
+        (format("~nThe piece ~w is not available.~n", [PieceSelected]), parsePiece(Board, Piece))
 	).
 
-parseRow(Player, Row) :-
-    format("~nPlayer ~d, in what row do you wanna place it? ",  [Player]),
+parseRow(Board, Row) :-
+    getCurrentPlayer(Board, Player),
+    format("~nPlayer ~d, in what row do you want to place it? ",  [Player]),
 	read(RowSelected),
     ((integer(RowSelected), RowSelected >= 1, RowSelected =< 4) ->
         Row = RowSelected;
-        (write('\nRow must be 1, 2, 3 or 4!\n'), parseRow(Player, Row))
+        (write('\nRow must be 1, 2, 3 or 4!\n'), parseRow(Board, Row))
     ).
 
-parseColumn(Player, Col) :-
-    format("~nPlayer ~d, in what column do you wanna place it? ",  [Player]),
+parseColumn(Board, Col) :-
+    getCurrentPlayer(Board, Player),
+    format("~nPlayer ~d, in what column do you want to place it? ",  [Player]),
 	read(ColSelected),
-    (column(ColSelected, _) ->
+    (column(ColSelected, _ColNumber) ->
         Col = ColSelected;
-        (write('\nColumn must be a, b, c or d!\n'), parseColumn(Player, Col))
+        (write('\nColumn must be a, b, c or d!\n'), parseColumn(Board, Col))
     ).
-
-/*
-verifyRow(Row, Piece) :-
-	oppositePiece(Piece, Opposite),
-	\+board(Row, 1, Opposite),
-	\+board(Row, 2, Opposite),
-	\+board(Row, 3, Opposite),
-	\+board(Row, 4, Opposite).
-
-verifyColumn(Col, Piece) :-
-	oppositePiece(Piece, Opposite),
-	\+board(1, Col, Opposite),
-	\+board(2, Col, Opposite),
-	\+board(3, Col, Opposite),
-	\+board(4, Col, Opposite).
-
-verifyQuad(1, Piece) :-
-	oppositePiece(Piece, Opposite),
-	\+board(1, a, Opposite),
-	\+board(1, b, Opposite),
-	\+board(2, a, Opposite),
-	\+board(2, b, Opposite).
-
-verifyQuad(2, Piece) :-
-	oppositePiece(Piece, Opposite),
-	\+board(1, c, Opposite),
-	\+board(1, d, Opposite),
-	\+board(2, c, Opposite),
-	\+board(2, d, Opposite).
-
-verifyQuad(3, Piece) :-
-	oppositePiece(Piece, Opposite),
-	\+board(3, a, Opposite),
-	\+board(3, b, Opposite),
-	\+board(4, a, Opposite),
-	\+board(4, b, Opposite).
-
-verifyQuad(4, Piece) :-
-	oppositePiece(Piece, Opposite),
-	\+board(3, c, Opposite),
-	\+board(3, d, Opposite),
-	\+board(4, c, Opposite),
-	\+board(4, d, Opposite).
-
-verifyCoords(Row, Col, Piece, Res) :- 
-	((integer(Row), Row >= 1, Row =< 4, column(Col, _)) -> 
-		(\+board(Row, Col, e) ->
-			(write('\nThis cell already has a piece!\n'), Res=0);
-			(verifyRow(Row, Piece), verifyColumn(Col, Piece), getQuad(Row, Col, Quad), verifyQuad(Quad, Piece) ->
-				Res=1;
-				(write('\nYou cannot place a piece in the same row, column or quadrant as another piece of the same shape but different color!\n'), Res=0)
-			)
-		);
-		write('\nRow or Column are incorrect!\n')
-	).
-*/
 
 verifyRow(Board, Row, Piece) :-
 	oppositePiece(Piece, Opposite),
@@ -120,8 +67,8 @@ verifyQuad(Board, 4, Piece) :-
     \+getPiece(Board, 4, c, Opposite),
     \+getPiece(Board, 4, d, Opposite).
 
-verifyEmptyCell(Board, Row, Col) :-
-    member(cell(Row, Col, e), Board).
+verifyEmptyCell(board(_CurrentPlayer, PiecesBoard, _PiecesPlayer1, _PiecesPlayer2), Row, Col) :-
+    member(cell(Row, Col, e), PiecesBoard).
 
 verifyMove(Board, Row, Col, Piece) :- 
     (verifyEmptyCell(Board, Row, Col) ->
@@ -145,12 +92,7 @@ delete_one(X,L,L1):-
     append(La,[X|Lb],L),
     append(La,Lb,L1). 
 
-removePiece(Piece, Player) :-
-    pieces(Player, Pieces),
-    delete_one(Piece, Pieces, NewPieces),
-    updatePieces(Player, NewPieces).
-
-convertToShapes([], _).
+convertToShapes([], _Shapes).
 
 convertToShapes([H|T], Shapes) :-
     getShape(H, S),

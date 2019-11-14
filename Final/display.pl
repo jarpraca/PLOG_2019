@@ -7,6 +7,8 @@ write_row_number(N):-
 
 draw_separator:- write('      ______ ______ ______ ______\n').
 
+drawColumn(_Board, _Row, 5).
+
 drawColumn(Board, Row, Col) :-
 	Col < 5,
 	write('  '),
@@ -18,7 +20,7 @@ drawColumn(Board, Row, Col) :-
 	NextCol is Col+1,
 	drawColumn(Board, Row, NextCol).
 
-drawColumn(_, _, 5).
+drawRow( _Board, 5).
 
 drawRow(Board, Row) :-
 	Row < 5,
@@ -29,8 +31,6 @@ drawRow(Board, Row) :-
 	write('\n     |______|______|______|______|\n'),
 	NextRow is Row+1,
 	drawRow(Board, NextRow).
-
-drawRow( _, 5).
 
 draw_number(N):-
 	write('Player '),
@@ -46,8 +46,8 @@ draw_pieces([H|T]):-
 	write(' '),
     draw_pieces(T).
 
-draw_player(Player):-
-	pieces(Player, Pieces),
+draw_player(Board, Player):-
+	getPiecesPlayer(Board, Player, Pieces),
 	draw_number(Player),
 	write('Pieces : '),
 	draw_pieces(Pieces).
@@ -61,7 +61,7 @@ drawBoard(Board) :-
 
 display_game(Board, Player) :-
 	drawBoard(Board),
-	draw_player(Player).
+	draw_player(Board, Player).
 
 displayWinner(Player) :-
 	write('  ============================='),nl,
