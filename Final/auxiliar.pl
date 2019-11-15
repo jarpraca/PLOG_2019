@@ -1,8 +1,13 @@
+hasPiece(Board, Player, Piece) :-
+    getPiecesPlayer(Board, Player, Pieces),
+    delete_duplicates(Pieces, UniquePieces),
+    member(Piece, UniquePieces).
+
 parsePiece(Board, Piece) :-
     getCurrentPlayer(Board, Player),
     format("~nPlayer ~d, what piece do you want to place? ", [Player]),
 	read(PieceSelected),
-	((getPiecesPlayer(Board, Player, Pieces), member(PieceSelected, Pieces)) -> 
+	(hasPiece(Board, Player, PieceSelected) -> 
         (format("~nThe piece ~w has been selected.~n", [PieceSelected]), Piece = PieceSelected);
         (format("~nThe piece ~w is not available.~n", [PieceSelected]), parsePiece(Board, Piece))
 	).
@@ -70,7 +75,7 @@ verifyQuad(Board, 4, Piece) :-
 verifyEmptyCell(board(_CurrentPlayer, PiecesBoard, _PiecesPlayer1, _PiecesPlayer2), Row, Col) :-
     member(cell(Row, Col, e), PiecesBoard).
 
-verifyMove(Board, Row, Col, Piece) :- 
+verifyMoveError(Board, Row, Col, Piece) :- 
     (verifyEmptyCell(Board, Row, Col) ->
         true;
         (write('\nThis cell already has a piece!\n'), fail)
@@ -88,9 +93,19 @@ verifyMove(Board, Row, Col, Piece) :-
         (write('\nYou cannot place a piece in the same quadrant as another piece of the same shape but different color!\n'), fail)
     ).
 
+verifyMove(Board, Row, Col, Piece) :- 
+    verifyEmptyCell(Board, Row, Col),
+    verifyRow(Board, Row, Piece),
+    verifyColumn(Board, Col, Piece),
+    getQuad(Row, Col, Quad),
+    verifyQuad(Board, Quad, Piece).
+
 delete_one(X,L,L1):-
     append(La,[X|Lb],L),
     append(La,Lb,L1). 
+
+delete_duplicates(X, Y) :-
+    sort(X, Y).
 
 convertToShapes([], _Shapes).
 

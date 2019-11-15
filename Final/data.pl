@@ -90,6 +90,15 @@ oppositePiece(wo, bo).
 oppositePiece(wc, bc).
 oppositePiece(ws, bs).
 
+piecePlayer(1, wo).
+piecePlayer(1, wy).
+piecePlayer(1, ws).
+piecePlayer(1, wc).
+piecePlayer(2, bo).
+piecePlayer(2, by).
+piecePlayer(2, bs).
+piecePlayer(2, bc).
+
 column(a,1).
 column(b,2).
 column(c,3).

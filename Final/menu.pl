@@ -34,11 +34,17 @@ parseOption(0) :-
 
 parseOption(1) :-
 	startGame.
-
+/*
+parseOption(_) :-
+    menu.
+*/
 parseReplay(y) :-
 	menu.
 
 parseReplay(n).
+
+parseReplay(_) :-
+    replay.
 
 replay :-
     write('\nDo you want to play again? (y/n) '),
