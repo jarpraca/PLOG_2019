@@ -150,3 +150,7 @@ column(a,1).
 column(b,2).
 column(c,3).
 column(d,4).
+
+level(1).
+level(2).
+level(3).

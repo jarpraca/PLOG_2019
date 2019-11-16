@@ -59,7 +59,13 @@ value_losing_moves(Board, Player, ListOfMoves, Value) :-
 choose_move(Board, 1, Move) :-
     getCurrentPlayer(Board, Player),
     valid_moves(Board, Player, ListOfMoves),
-    best_move(Board, Player, 1, ListOfMoves, -999999, _Aux, Move).
+    random_member(Move, ListOfMoves).
+
+choose_move(Board, Level, Move) :-
+    getCurrentPlayer(Board, Player),
+    valid_moves(Board, Player, ListOfMoves),
+    NewLevel is Level-1,
+    best_move(Board, Player, NewLevel, ListOfMoves, -999999, _Aux, Move).
 
 best_move(_Board, _Player, _Level, [], _MaxValue, Curr_Best_Move, Curr_Best_Move).
 

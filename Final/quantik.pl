@@ -5,4 +5,7 @@
 :- consult('data.pl').
 :- consult('game.pl').
 
+:- use_module(library(random)).
+:- use_module(library(system)).
+
 play :- menu.

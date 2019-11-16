@@ -231,3 +231,10 @@ opponent_can_win([_Row, _Col, Piece], Board, Player) :-
     oppositePiece(Piece, Opposite),
     getOpponentPlayer(Player, Opponent), 
     hasPiece(Board, Opponent, Opposite).
+
+currentPlayerLevel(Player, LevelPlayer1, LevelPlayer2, CurrentLevel) :-
+    playerNumber(Player, PlayerNumber),
+    (PlayerNumber =:= 1 ->
+        CurrentLevel is LevelPlayer1;
+        CurrentLevel is LevelPlayer2
+    ).

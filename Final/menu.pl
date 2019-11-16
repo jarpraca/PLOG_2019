@@ -29,17 +29,33 @@ displayMenu :-
     write('|             Developed by: Joao Praca, Lucas Ribeiro            |'),nl,
     write('|________________________________________________________________|'),nl.
 
+displayLevels :-
+    write('   _____ ______________________ '),nl,
+    write('  |     |                      |'),nl,
+    write('  |  1  |         Easy         |'),nl,
+    write('  |_____|______________________|'),nl,
+    write('  |     |                      |'),nl,
+    write('  |  2  |        Medium        |'),nl,
+    write('  |_____|______________________|'),nl,
+    write('  |     |                      |'),nl,
+    write('  |  3  |         Hard         |'),nl,
+    write('  |_____|______________________|'),nl.
+
+
 parseOption(0) :-
     fail.
 
 parseOption(1) :-
-	startGame(p1).
+	startGame(p1, 0, 0).
 
 parseOption(2) :-
-	startGame(p).
+    choose_level(c, Level),
+	startGame(p, 0, Level).
 
 parseOption(3) :-
-	startGame(c1).
+    choose_level(c1, LevelC1),
+    choose_level(c2, LevelC2),
+	startGame(c1, LevelC1, LevelC2).
 /*
 parseOption(_) :-
     menu.
@@ -56,6 +72,16 @@ replay :-
     write('\nDo you want to play again? (y/n) '),
 	read(Replay),
 	parseReplay(Replay).
+
+choose_level(Player, Level) :-
+    displayLevels,
+    playerName(Player, PlayerName),
+    format("~nChoose a level for ~w: ", [PlayerName]),
+    read(Level),
+    (level(Level) ->
+        true;
+        (write("\nLevel must be 1, 2 or 3!\n"), choose_level(Player, Level))
+    ).
 
 menu :-
 	displayMenu,
