@@ -13,17 +13,21 @@ board(_CurrentPlayer, _PiecesBoard, _PiecesPlayer1, _PiecesPlayer2).
 
 getCurrentPlayer(board(CurrentPlayer, _PiecesBoard, _PiecesPlayer1, _PiecesPlayer2), CurrentPlayer).
 
-getPiecesPlayer(board(_CurrentPlayer, _PiecesBoard, PiecesPlayer1, _PiecesPlayer2), 1, PiecesPlayer1).
+getPiecesPlayer(board(_CurrentPlayer, _PiecesBoard, PiecesPlayer1, _PiecesPlayer2), FirstPlayer, PiecesPlayer1) :-
+    playerNumber(FirstPlayer, 1).
 
-getPiecesPlayer(board(_CurrentPlayer, _PiecesBoard, _PiecesPlayer1, PiecesPlayer2), 2, PiecesPlayer2).
+getPiecesPlayer(board(_CurrentPlayer, _PiecesBoard, _PiecesPlayer1, PiecesPlayer2), SecondPlayer, PiecesPlayer2) :-
+    playerNumber(SecondPlayer, 2).
 
 getPiecesBoard(board(_CurrentPlayer, PiecesBoard, _PiecesPlayer1, _PiecesPlayer2), PiecesBoard).
 
-setPiece(board(1, PiecesBoard, PiecesPlayer1, PiecesPlayer2), Row, Col, Piece, board(1, NewPiecesBoard, NewPiecesPlayer1, PiecesPlayer2)) :-
+setPiece(board(FirstPlayer, PiecesBoard, PiecesPlayer1, PiecesPlayer2), Row, Col, Piece, board(FirstPlayer, NewPiecesBoard, NewPiecesPlayer1, PiecesPlayer2)) :-
+    playerNumber(FirstPlayer, 1),
     updateBoardPieces(PiecesBoard, Row, Col, Piece, NewPiecesBoard),
     updatePlayerPieces(PiecesPlayer1, 1, Piece, NewPiecesPlayer1).
 
-setPiece(board(2, PiecesBoard, PiecesPlayer1, PiecesPlayer2), Row, Col, Piece, board(2, NewPiecesBoard, PiecesPlayer1, NewPiecesPlayer2)) :-
+setPiece(board(SecondPlayer, PiecesBoard, PiecesPlayer1, PiecesPlayer2), Row, Col, Piece, board(SecondPlayer, NewPiecesBoard, PiecesPlayer1, NewPiecesPlayer2)) :-
+    playerNumber(SecondPlayer, 2),
     updateBoardPieces(PiecesBoard, Row, Col, Piece, NewPiecesBoard),
     updatePlayerPieces(PiecesPlayer2, 2, Piece, NewPiecesPlayer2).
 
@@ -90,14 +94,57 @@ oppositePiece(wo, bo).
 oppositePiece(wc, bc).
 oppositePiece(ws, bs).
 
-piecePlayer(1, wo).
-piecePlayer(1, wy).
-piecePlayer(1, ws).
-piecePlayer(1, wc).
-piecePlayer(2, bo).
-piecePlayer(2, by).
-piecePlayer(2, bs).
-piecePlayer(2, bc).
+piecePlayer(FirstPlayer, wo) :-
+    playerNumber(FirstPlayer, 1).
+piecePlayer(FirstPlayer, wy) :-
+    playerNumber(FirstPlayer, 1).
+piecePlayer(FirstPlayer, ws) :-
+    playerNumber(FirstPlayer, 1).
+piecePlayer(FirstPlayer, wc) :-
+    playerNumber(FirstPlayer, 1).
+piecePlayer(SecondPlayer, bo) :-
+    playerNumber(SecondPlayer, 2).
+piecePlayer(SecondPlayer, by) :-
+    playerNumber(SecondPlayer, 2).
+piecePlayer(SecondPlayer, bs) :-
+    playerNumber(SecondPlayer, 2).
+piecePlayer(SecondPlayer, bc) :-
+    playerNumber(SecondPlayer, 2).
+
+getOpponentPlayer(p1, p2).
+getOpponentPlayer(p2, p1).
+getOpponentPlayer(p, c).
+getOpponentPlayer(c, p).
+getOpponentPlayer(c1, c2).
+getOpponentPlayer(c2, c1).
+
+playerNumber(p1, 1).
+playerNumber(p, 1).
+playerNumber(c1, 1).
+playerNumber(p2, 2).
+playerNumber(c, 2).
+playerNumber(c2, 2).
+
+playerName(p1, 'Player 1').
+playerName(p, 'Player').
+playerName(c1, 'Computer 1').
+playerName(p2, 'Player 2').
+playerName(c, 'Computer').
+playerName(c2, 'Computer 2').
+
+playerNameCaps(p1, 'PLAYER 1').
+playerNameCaps(p, 'PLAYER').
+playerNameCaps(c1, 'COMPUTER 1').
+playerNameCaps(p2, 'PLAYER 2').
+playerNameCaps(c, 'COMPUTER').
+playerNameCaps(c2, 'COMPUTER 2').
+
+playerType(p1, p).
+playerType(p, p).
+playerType(p2, p).
+playerType(c1, c).
+playerType(c, c).
+playerType(c2, c).
 
 column(a,1).
 column(b,2).

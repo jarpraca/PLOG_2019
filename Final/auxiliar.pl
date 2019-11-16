@@ -5,7 +5,8 @@ hasPiece(Board, Player, Piece) :-
 
 parsePiece(Board, Piece) :-
     getCurrentPlayer(Board, Player),
-    format("~nPlayer ~d, what piece do you want to place? ", [Player]),
+    playerName(Player, PlayerName),
+    format("~n~w, what piece do you want to place? ", [PlayerName]),
 	read(PieceSelected),
 	(hasPiece(Board, Player, PieceSelected) -> 
         (format("~nThe piece ~w has been selected.~n", [PieceSelected]), Piece = PieceSelected);
@@ -14,7 +15,8 @@ parsePiece(Board, Piece) :-
 
 parseRow(Board, Row) :-
     getCurrentPlayer(Board, Player),
-    format("~nPlayer ~d, in what row do you want to place it? ",  [Player]),
+    playerName(Player, PlayerName),
+    format("~n~w, in what row do you want to place it? ",  [PlayerName]),
 	read(RowSelected),
     ((integer(RowSelected), RowSelected >= 1, RowSelected =< 4) ->
         Row = RowSelected;
@@ -23,7 +25,8 @@ parseRow(Board, Row) :-
 
 parseColumn(Board, Col) :-
     getCurrentPlayer(Board, Player),
-    format("~nPlayer ~d, in what column do you want to place it? ",  [Player]),
+	playerName(Player, PlayerName),
+    format("~n~w, in what column do you want to place it? ",  [PlayerName]),
 	read(ColSelected),
     (column(ColSelected, _ColNumber) ->
         Col = ColSelected;
@@ -106,6 +109,10 @@ delete_one(X,L,L1):-
 
 delete_duplicates(X, Y) :-
     sort(X, Y).
+
+difference_lists(L1, [H | T], L) :-
+    delete_one(H, L1, L),
+    difference_lists(L1, T, L).
 
 convertToShapes([], _Shapes).
 
@@ -214,3 +221,13 @@ checkWin(Board) :-
     checkQuadWin(Board, 2);
     checkQuadWin(Board, 3);
     checkQuadWin(Board, 4).
+
+opponent_loses([_Row, _Col, Piece], Board, Player) :-
+    oppositePiece(Piece, Opposite),
+    getOpponentPlayer(Player, Opponent), 
+    \+hasPiece(Board, Opponent, Opposite).
+
+opponent_can_win([_Row, _Col, Piece], Board, Player) :-
+    oppositePiece(Piece, Opposite),
+    getOpponentPlayer(Player, Opponent), 
+    hasPiece(Board, Opponent, Opposite).

@@ -32,9 +32,9 @@ drawRow(Board, Row) :-
 	NextRow is Row+1,
 	drawRow(Board, NextRow).
 
-draw_number(N):-
-	write('Player '),
-	print(N),
+draw_name(Player):-
+	playerName(Player, PlayerName),
+	print(PlayerName),
 	write('\n').
 
 draw_pieces([]) :-
@@ -48,7 +48,7 @@ draw_pieces([H|T]):-
 
 draw_player(Board, Player):-
 	getPiecesPlayer(Board, Player, Pieces),
-	draw_number(Player),
+	draw_name(Player),
 	write('Pieces : '),
 	draw_pieces(Pieces).
 
@@ -66,6 +66,23 @@ display_game(Board, Player) :-
 displayWinner(Player) :-
 	write('  ============================='),nl,
 	write('||                             ||'),nl,
-	format("||        PLAYER ~d WON!        ||", [Player]),nl,
+	displayWinnerName(Player),
 	write('||                             ||'),nl,
 	write('  ============================='),nl.
+
+displayWinnerName(p) :-
+	playerNameCaps(p, PlayerName),
+	format("||         ~w WON!         ||", [PlayerName]),nl.
+
+displayWinnerName(c1) :-
+	playerNameCaps(c1, PlayerName),
+	format("||       ~w WON!       ||", [PlayerName]),nl.
+
+displayWinnerName(c2) :-
+	playerNameCaps(c2, PlayerName),
+	format("||       ~w WON!       ||", [PlayerName]),nl.
+
+displayWinnerName(Player) :-
+	playerNameCaps(Player, PlayerName),
+	format("||        ~w WON!        ||", [PlayerName]),nl.
+

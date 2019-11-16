@@ -33,7 +33,13 @@ parseOption(0) :-
     fail.
 
 parseOption(1) :-
-	startGame.
+	startGame(p1).
+
+parseOption(2) :-
+	startGame(p).
+
+parseOption(3) :-
+	startGame(c1).
 /*
 parseOption(_) :-
     menu.
