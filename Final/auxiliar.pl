@@ -1,8 +1,16 @@
+/**
+ * Checks if Player has a certain Piece
+ */
 hasPiece(Board, Player, Piece) :-
     getPiecesPlayer(Board, Player, Pieces),
     delete_duplicates(Pieces, UniquePieces),
     member(Piece, UniquePieces).
-
+/**
+ * Asks the user for a piece
+ * Reads the piece
+ * Checks if the piece is available
+ * Returns the piece
+ */
 parsePiece(Board, Piece) :-
     getCurrentPlayer(Board, Player),
     playerName(Player, PlayerName),
@@ -13,6 +21,12 @@ parsePiece(Board, Piece) :-
         (format("~nThe piece ~w is not available.~n", [PieceSelected]), parsePiece(Board, Piece))
 	).
 
+/**
+ * Asks the user for a row
+ * Reads the row
+ * Checks if the row is correct
+ * Returns the row
+ */
 parseRow(Board, Row) :-
     getCurrentPlayer(Board, Player),
     playerName(Player, PlayerName),
@@ -23,6 +37,12 @@ parseRow(Board, Row) :-
         (write('\nRow must be 1, 2, 3 or 4!\n'), parseRow(Board, Row))
     ).
 
+/**
+ * Asks the user for a column
+ * Reads the column
+ * Checks if the column is correct
+ * Returns the column
+ */
 parseColumn(Board, Col) :-
     getCurrentPlayer(Board, Player),
 	playerName(Player, PlayerName),
@@ -33,6 +53,9 @@ parseColumn(Board, Col) :-
         (write('\nColumn must be a, b, c or d!\n'), parseColumn(Board, Col))
     ).
 
+/**
+ * Checks if there is a piece with the same shape but opposite color as Piece in a certain Row
+ */
 verifyRow(Board, Row, Piece) :-
 	oppositePiece(Piece, Opposite),
     \+getPiece(Board, Row, a, Opposite),
@@ -40,6 +63,9 @@ verifyRow(Board, Row, Piece) :-
     \+getPiece(Board, Row, c, Opposite),
     \+getPiece(Board, Row, d, Opposite).
 
+/**
+ * Checks if there is a piece with the same shape but opposite color as Piece in a certain Column
+ */
 verifyColumn(Board, Col, Piece) :-
 	oppositePiece(Piece, Opposite),
     \+getPiece(Board, 1, Col, Opposite),
@@ -47,6 +73,9 @@ verifyColumn(Board, Col, Piece) :-
     \+getPiece(Board, 3, Col, Opposite),
     \+getPiece(Board, 4, Col, Opposite).
 
+/**
+ * Checks if there is a piece with the same shape but opposite color as Piece in Quad 1
+ */
 verifyQuad(Board, 1, Piece) :-
 	oppositePiece(Piece, Opposite),
     \+getPiece(Board, 1, a, Opposite),
@@ -54,6 +83,9 @@ verifyQuad(Board, 1, Piece) :-
     \+getPiece(Board, 2, a, Opposite),
     \+getPiece(Board, 2, b, Opposite).
 
+/**
+ * Checks if there is a piece with the same shape but opposite color as Piece in Quad 2
+ */
 verifyQuad(Board, 2, Piece) :-
 	oppositePiece(Piece, Opposite),
     \+getPiece(Board, 1, c, Opposite),
@@ -61,6 +93,9 @@ verifyQuad(Board, 2, Piece) :-
     \+getPiece(Board, 2, c, Opposite),
     \+getPiece(Board, 2, d, Opposite).
 
+/**
+ * Checks if there is a piece with the same shape but opposite color as Piece in Quad 3
+ */
 verifyQuad(Board, 3, Piece) :-
 	oppositePiece(Piece, Opposite),
     \+getPiece(Board, 3, a, Opposite),
@@ -68,6 +103,9 @@ verifyQuad(Board, 3, Piece) :-
     \+getPiece(Board, 4, a, Opposite),
     \+getPiece(Board, 4, b, Opposite).
 
+/**
+ * Checks if there is a piece with the same shape but opposite color as Piece in Quad 4
+ */
 verifyQuad(Board, 4, Piece) :-
 	oppositePiece(Piece, Opposite),
     \+getPiece(Board, 3, c, Opposite),
@@ -75,9 +113,16 @@ verifyQuad(Board, 4, Piece) :-
     \+getPiece(Board, 4, c, Opposite),
     \+getPiece(Board, 4, d, Opposite).
 
+/**
+ * Checks if a cell (defined by Row and Col) of a Board is empty
+ */
 verifyEmptyCell(board(_CurrentPlayer, PiecesBoard, _PiecesPlayer1, _PiecesPlayer2), Row, Col) :-
     member(cell(Row, Col, e), PiecesBoard).
 
+/**
+ * Verifies if a move is valid, meaning the cell is empty and there isn't an opposite piece in the same row, column or quadrant
+ * Prints error if any of the previous constrains fails
+ */
 verifyMoveError(Board, Row, Col, Piece) :- 
     (verifyEmptyCell(Board, Row, Col) ->
         true;
@@ -96,6 +141,9 @@ verifyMoveError(Board, Row, Col, Piece) :-
         (write('\nYou cannot place a piece in the same quadrant as another piece of the same shape but different color!\n'), fail)
     ).
 
+/**
+ * Verifies if a move is valid, meaning the cell is empty and there isn't an opposite piece in the same row, column or quadrant
+ */
 verifyMove(Board, Row, Col, Piece) :- 
     verifyEmptyCell(Board, Row, Col),
     verifyRow(Board, Row, Piece),
@@ -103,20 +151,25 @@ verifyMove(Board, Row, Col, Piece) :-
     getQuad(Row, Col, Quad),
     verifyQuad(Board, Quad, Piece).
 
+/**
+ * Removes the element X from the list L
+ * Returns the resulting list as L1
+ */
 delete_one(X,L,L1):-
     append(La,[X|Lb],L),
     append(La,Lb,L1). 
 
+/**
+ * Removes the duplicate elements from the list X
+ * Returns the resulting list as Y
+ */
 delete_duplicates(X, Y) :-
     sort(X, Y).
 
-convertToShapes([], _Shapes).
-
-convertToShapes([H|T], Shapes) :-
-    getShape(H, S),
-    append([S], Shapes, Shapes),
-    convertToShapes(T, Shapes).
-
+/**
+ * Gets the shapes of the pieces of a certain Row
+ * Return a list with the shapes as List
+ */
 rowToList(Board, Row, List) :-
     getPiece(Board, Row, a, X1),
     getPiece(Board, Row, b, X2),
@@ -128,6 +181,10 @@ rowToList(Board, Row, List) :-
     getShape(X4, Y4),
     List = [Y1, Y2, Y3, Y4].
 
+/**
+ * Gets the shapes of the pieces of a certain Column
+ * Return a list with the shapes as List
+ */
 columnToList(Board, Col, List) :-
     getPiece(Board, 1, Col, X1),
     getPiece(Board, 2, Col, X2),
@@ -139,6 +196,10 @@ columnToList(Board, Col, List) :-
     getShape(X4, Y4),
     List = [Y1, Y2, Y3, Y4].
 
+/**
+ * Gets the shapes of the pieces of Quad 1
+ * Return a list with the shapes as List
+ */
 quadToList(Board, 1, List) :-
     getPiece(Board, 1, a, X1),
     getPiece(Board, 1, b, X2),
@@ -150,6 +211,10 @@ quadToList(Board, 1, List) :-
     getShape(X4, Y4),
     List = [Y1, Y2, Y3, Y4].
 
+/**
+ * Gets the shapes of the pieces of Quad 2
+ * Return a list with the shapes as List
+ */
 quadToList(Board, 2, List) :-
     getPiece(Board, 1, c, X1),
     getPiece(Board, 1, d, X2),
@@ -161,6 +226,10 @@ quadToList(Board, 2, List) :-
     getShape(X4, Y4),
     List = [Y1, Y2, Y3, Y4].
 
+/**
+ * Gets the shapes of the pieces of Quad 3
+ * Return a list with the shapes as List
+ */
 quadToList(Board, 3, List) :-
     getPiece(Board, 3, a, X1),
     getPiece(Board, 3, b, X2),
@@ -172,6 +241,10 @@ quadToList(Board, 3, List) :-
     getShape(X4, Y4),
     List = [Y1, Y2, Y3, Y4].
 
+/**
+ * Gets the shapes of the pieces of Quad 4
+ * Return a list with the shapes as List
+ */
 quadToList(Board, 4, List) :-
     getPiece(Board, 3, c, X1),
     getPiece(Board, 3, d, X2),
@@ -183,6 +256,9 @@ quadToList(Board, 4, List) :-
     getShape(X4, Y4),
     List = [Y1, Y2, Y3, Y4].
 
+/**
+ * Checks if a list doesn't have duplicate elements
+ */
 checkListUnique([H|[]], 1) :-
     \+H == e.
 
@@ -192,18 +268,30 @@ checkListUnique([H|T], N) :-
     X is N-1,
     checkListUnique(T, X).
 
+/**
+ * Checks if a Player won in a Row, meaning if there are all the shapes
+ */
 checkRowWin(Board, Row) :- 
     rowToList(Board, Row, Pieces),
     checkListUnique(Pieces, 4).
 
+/**
+ * Checks if a Player won in a Column, meaning if there are all the shapes
+ */
 checkColumnWin(Board, Col) :- 
     columnToList(Board, Col, Pieces),
     checkListUnique(Pieces, 4).
 
+/**
+ * Checks if a Player won in a Quad, meaning if there are all the shapes
+ */
 checkQuadWin(Board, Quad) :- 
     quadToList(Board, Quad, Pieces),
     checkListUnique(Pieces, 4).
 
+/**
+ * Checks if a Player won, meaning if there are all the shapes in the same Row, Col or Quad
+ */
 checkWin(Board) :- 
     checkRowWin(Board, 1);
     checkRowWin(Board, 2);
@@ -218,16 +306,29 @@ checkWin(Board) :-
     checkQuadWin(Board, 3);
     checkQuadWin(Board, 4).
 
-opponent_loses([_Row, _Col, Piece], Board, Player) :-
+/**
+ * Checks if the opponent doesn't have the piece or can't play the move that avoids its defeat
+ */
+opponent_loses([Row, Col, Piece], Board, Player) :-
     oppositePiece(Piece, Opposite),
     getOpponentPlayer(Player, Opponent), 
-    \+hasPiece(Board, Opponent, Opposite).
+    (
+        \+hasPiece(Board, Opponent, Opposite);
+        \+verifyMove(Board, Row, Col, Opposite)
+    ).
 
-opponent_can_win([_Row, _Col, Piece], Board, Player) :-
+/**
+ * Checks if the opponent has the piece and is able to play the move that makes him win
+ */
+opponent_can_win([Row, Col, Piece], Board, Player) :-
     oppositePiece(Piece, Opposite),
     getOpponentPlayer(Player, Opponent), 
-    hasPiece(Board, Opponent, Opposite).
+    hasPiece(Board, Opponent, Opposite),
+    verifyMove(Board, Row, Col, Opposite).
 
+/**
+ * Gets the Player's Level of difficulty
+ */
 currentPlayerLevel(Player, LevelPlayer1, LevelPlayer2, CurrentLevel) :-
     playerNumber(Player, PlayerNumber),
     (PlayerNumber =:= 1 ->

@@ -1,12 +1,24 @@
+/**
+ * Writes column names
+ */
 draw_column_letters :- write('        a      b      c      d\n').
 
-write_row_number(N):-
+/**
+ * Writes row number
+ */
+draw_row_number(N):-
 	write('  '),
 	print(N),
 	write('  ').
 
+/**
+ * Draws board line separator
+ */
 draw_separator:- write('      ______ ______ ______ ______\n').
 
+/**
+ * Draws all pieces of a Row using Col to find each piece in Board
+ */
 drawColumn(_Board, _Row, 5).
 
 drawColumn(Board, Row, Col) :-
@@ -20,23 +32,32 @@ drawColumn(Board, Row, Col) :-
 	NextCol is Col+1,
 	drawColumn(Board, Row, NextCol).
 
+/**
+ * Draws all rows of Board and its internal separators
+ */
 drawRow( _Board, 5).
 
 drawRow(Board, Row) :-
 	Row < 5,
 	write('     |      |      |      |      |\n'),
-	write_row_number(Row),
+	draw_row_number(Row),
 	write('|'),
 	drawColumn(Board, Row, 1),
 	write('\n     |______|______|______|______|\n'),
 	NextRow is Row+1,
 	drawRow(Board, NextRow).
 
+/**
+ * Draws Player name
+ */
 draw_name(Player):-
 	playerName(Player, PlayerName),
 	print(PlayerName),
 	write('\n').
 
+/**
+ * Draws pieces of the list received
+ */
 draw_pieces([]) :-
 	write('\n\n').
 
@@ -46,12 +67,18 @@ draw_pieces([H|T]):-
 	write(' '),
     draw_pieces(T).
 
+/**
+ * Draws Player name and its remaining pieces
+ */
 draw_player(Board, Player):-
 	getPiecesPlayer(Board, Player, Pieces),
 	draw_name(Player),
 	write('Pieces : '),
 	draw_pieces(Pieces).
 
+/**
+ * Draws Board (all rows, column and respective pieces)
+ */
 drawBoard(Board) :-
 	nl,
 	draw_column_letters,
@@ -59,10 +86,16 @@ drawBoard(Board) :-
 	drawRow(Board, 1),
 	nl.
 
+/**
+ * Draws Board and Player information
+ */
 display_game(Board, Player) :-
 	drawBoard(Board),
 	draw_player(Board, Player).
 
+/**
+ * Draws Player as winner of the game
+ */
 displayWinner(Player) :-
 	write('  ============================='),nl,
 	write('||                             ||'),nl,
@@ -70,6 +103,9 @@ displayWinner(Player) :-
 	write('||                             ||'),nl,
 	write('  ============================='),nl.
 
+/**
+ * Draws Winner name 
+ */
 displayWinnerName(p) :-
 	playerNameCaps(p, PlayerName),
 	format("||         ~w WON!         ||", [PlayerName]),nl.
