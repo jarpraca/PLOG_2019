@@ -6,7 +6,7 @@ hasPiece(Board, Player, Piece) :-
 parsePiece(Board, Piece) :-
     getCurrentPlayer(Board, Player),
     playerName(Player, PlayerName),
-    format("~n~w, what piece do you want to place? ", [PlayerName]),
+    format("~n~w, what piece do you want to place? (use lower case) ", [PlayerName]),
 	read(PieceSelected),
 	(hasPiece(Board, Player, PieceSelected) -> 
         (format("~nThe piece ~w has been selected.~n", [PieceSelected]), Piece = PieceSelected);
