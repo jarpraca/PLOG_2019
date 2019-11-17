@@ -25,7 +25,7 @@ losing_moves(_Board, _Player, [], ListOfLosingMoves, ListOfLosingMoves).
 
 losing_moves(Board, Player, [Move | ListOfMoves], Aux, ListOfLosingMoves) :-
     move(Move, Board, NewBoard),
-    ((checkWin(NewBoard), opponent_can_win(Move, NewBoard, Player)) ->
+    ((checkWin(NewBoard), opponent_can_win(Move, Board, Player)) ->
         (
             append([Move], Aux, NewAux),
             losing_moves(Board, Player, ListOfMoves, NewAux, ListOfLosingMoves)
@@ -42,7 +42,7 @@ winning_moves(_Board, _Player, [], ListOfWinningMoves, ListOfWinningMoves).
 
 winning_moves(Board, Player, [Move | ListOfMoves], Aux, ListOfWinningMoves) :-
     move(Move, Board, NewBoard),
-    ((checkWin(NewBoard), opponent_loses(Move, NewBoard, Player)) ->
+    ((checkWin(NewBoard), opponent_loses(Move, Board, Player)) ->
         (
             append([Move], Aux, NewAux),
             winning_moves(Board, Player, ListOfMoves, NewAux, ListOfWinningMoves)

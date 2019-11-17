@@ -257,7 +257,7 @@ quadToList(Board, 4, List) :-
     List = [Y1, Y2, Y3, Y4].
 
 /**
- * Checks if a list doesn't have duplicate elements
+ * Checks if a list doesn't have duplicate elements and has length 4
  */
 checkListUnique([H|[]], 1) :-
     \+H == e.
