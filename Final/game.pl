@@ -13,10 +13,18 @@ movePiece(p, Board, NewBoard, Level) :-
 		movePiece(p, Board, NewBoard, Level)
 	).
 
+movePiece(c, Board, NewBoard, 2) :-
+	write('Thinking...'),
+	choose_move(Board, 2, Move),
+	move(Move, Board, NewBoard),
+	nl.
+
 movePiece(c, Board, NewBoard, Level) :-
+	write('Thinking...'),
 	choose_move(Board, Level, Move),
 	move(Move, Board, NewBoard),
-	sleep(1).
+	sleep(1),
+	nl.
 
 game_over(Board, Winner) :- 
     checkWin(Board),

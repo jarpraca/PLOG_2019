@@ -67,34 +67,40 @@ choose_move(Board, Level, Move) :-
     NewLevel is Level-1,
     best_move(Board, Player, NewLevel, ListOfMoves, -999999, _MaxValue, _Aux, Move).
 
-best_move(_Board, _Player, _Level, [], Curr_MaxValue, Curr_MaxValue, Curr_BestMove, Curr_BestMove).
+best_move(_Board, _Player, _Level, [], Curr_MaxValue, Curr_MaxValue, Curr_BestMove, BestMove) :-
+    random_member(BestMove, Curr_BestMove).
 
 best_move(Board, Player, 1, [Move | ListOfMoves], Curr_MaxValue, MaxValue, Curr_BestMove, BestMove) :-
     move(Move, Board, NewBoard),
     value(NewBoard, Player, Value),
     (Value > Curr_MaxValue ->
-        best_move(Board, Player, 1, ListOfMoves, Value, MaxValue, Move, BestMove);
-        best_move(Board, Player, 1, ListOfMoves, Curr_MaxValue, MaxValue, Curr_BestMove, BestMove)
+        best_move(Board, Player, 1, ListOfMoves, Value, MaxValue, [Move], BestMove);
+        (Value =:= Curr_MaxValue ->
+            best_move(Board, Player, 1, ListOfMoves, Value, MaxValue, [Move | Curr_BestMove], BestMove);
+            best_move(Board, Player, 1, ListOfMoves, Curr_MaxValue, MaxValue, Curr_BestMove, BestMove)
+        )
     ).
 
 best_move(Board, Player, Depth, [Move | ListOfMoves], Curr_MaxValue, MaxValue, Curr_BestMove, BestMove) :-
     Depth =\= 1,
     NewDepth is Depth - 1,
     move(Move, Board, NewBoard),
+    write('.'),
     (checkWin(NewBoard) ->
-        best_move(Board, Player, Depth, [], 999999, MaxValue, Move, BestMove);
+        best_move(Board, Player, Depth, [], 999999, MaxValue, [Move], BestMove);
         (
-            /*format("\nMe: ~w    ",[Move]),*/
             opponent_best_move(NewBoard, Player, NewDepth, OpponentBoard),
             (checkWin(OpponentBoard) ->
                 best_move(Board, Player, Depth, ListOfMoves, Curr_MaxValue, MaxValue, Curr_BestMove, BestMove);
                 (
                     valid_moves(OpponentBoard, Player, ListOfNextMoves),
-                    best_move(OpponentBoard, Player, NewDepth, ListOfNextMoves, -999999, Value, _Aux, NextMove),
-                    /*format("~d   ~w\n", [Value, NextMove]),*/
+                    best_move(OpponentBoard, Player, NewDepth, ListOfNextMoves, -999999, Value, _Aux, _NextMove),
                     (Value > Curr_MaxValue ->
-                        best_move(Board, Player, Depth, ListOfMoves, Value, MaxValue, Move, BestMove);
-                        best_move(Board, Player, Depth, ListOfMoves, Curr_MaxValue, MaxValue, Curr_BestMove, BestMove)
+                        best_move(Board, Player, Depth, ListOfMoves, Value, MaxValue, [Move], BestMove);
+                        (Value =:= Curr_MaxValue ->
+                            best_move(Board, Player, Depth, ListOfMoves, Value, MaxValue, [Move | Curr_BestMove], BestMove);
+                            best_move(Board, Player, Depth, ListOfMoves, Curr_MaxValue, MaxValue, Curr_BestMove, BestMove)
+                        )
                     )
                 )
             )
@@ -106,6 +112,5 @@ opponent_best_move(Board, Player, Depth, OpponentBoard) :-
     switchPlayer(Board, NextBoard),
     valid_moves(NextBoard, OpponentPlayer, ListOfMoves),
     best_move(NextBoard, OpponentPlayer, Depth, ListOfMoves, -999999, _MaxValue, _Aux, Move),
-    /*format("Opp: ~w\n",[Move]),*/
     move(Move, NextBoard, NextBoard2),
     switchPlayer(NextBoard2, OpponentBoard).

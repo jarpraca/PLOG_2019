@@ -110,10 +110,6 @@ delete_one(X,L,L1):-
 delete_duplicates(X, Y) :-
     sort(X, Y).
 
-difference_lists(L1, [H | T], L) :-
-    delete_one(H, L1, L),
-    difference_lists(L1, T, L).
-
 convertToShapes([], _Shapes).
 
 convertToShapes([H|T], Shapes) :-
