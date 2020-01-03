@@ -272,6 +272,9 @@ same_sum([X | R], Sum) :-
 /**
 * Counts the number of spaces between two black cells in a List
 */
+
+
+
 countSpaces([1 | List], Count) :-
     countSpacesAux(List, 0, Count).
 
@@ -375,6 +378,55 @@ invert([L | Coord], Aux, Inverted) :-
     append(Aux, [LR], NewAux),
     invert(Coord, NewAux, Inverted).
 
+/*Lucas came into action
+*/
+
+
+add_tail([],X,[X]).
+add_tail([H|T],X,[H|L]):-add_tail(T,X,L).
+
+getDiagonal([], _, _, []).
+getDiagonal([Row|Rest], Col, DCol, Result) :-
+    (  nth0(Col, Row, El)
+    -> (Result = [El | R2],
+        Col2 is Col + DCol,
+        getDiagonal(Rest, Col2, DCol, R2))
+    ;  Result = []).
+
+getAllDiagonals(Board, Diags):-
+    getAllDiagonalsAux(Board,0, Diags).
+
+getAllDiagonalsAux(Board,9, Diags).
+
+getAllDiagonalsAux(Board,Index, Diags):-
+    getDiagonal(Board, Index,1,DiagRight),
+    getDiagonal(Board, Index,-1,DiagLeft),
+    NewIndex is Index + 1,
+    getAllDiagonalsAux(Board, NewIndex, NewDiags),
+    add_tail(NewDiags,DiagRight,IntDiags),
+    add_tail(IntDiags,DiagLeft,Diags).
+
+printMatrix([]).
+printMatrix([H|T]) :- write(H), nl, printMatrix(T).
+
+
+checkConsecutive([0]).
+checkConsecutive([1]).
+
+checkConsecutive([]).
+
+checkConsecutive([Head|[HeadList|List]]):-
+    (Head \= 1 ; HeadList\= 1),
+    checkConsecutive([HeadList|List]).
+
+checkAllForConsecutives([]).
+
+checkAllForConsecutives([Head|List]):-
+    nl,nl,
+    print([Head|List]),nl,nl,
+    checkConsecutive(Head),
+    checkAllForConsecutives(List).
+
 ant(Lines) :-
     Lines=[ [C11,C12,C13,C14,C15,C16,C17,C18,C19],
             [C21,C22,C23,C24,C25,C26,C27,C28,C29],
@@ -386,6 +438,7 @@ ant(Lines) :-
             [C81,C82,C83,C84,C85,C86,C87,C88,C89],
             [C91,C92,C93,C94,C95,C96,C97,C98,C99]],
     transpose(Lines, Columns),
+    getAllDiagonals(Lines, Diags),
     append(Lines, Vars),
     domain(Vars, 0, 1),
     % constraints
@@ -401,10 +454,12 @@ ant(Lines) :-
     checkAllCells(Lines),
     spaces(Lines),
     spaces(Columns),
-    %getAllDiags(Lines, Diags),
-    %spacesDiags(Diags),
+    checkAllForConsecutives(Diags),
+    %print(Diags),nl,
     labeling([], Vars),
     printLines(Lines).
+
+
 
 %-----------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------
