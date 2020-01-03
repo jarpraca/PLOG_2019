@@ -51,7 +51,7 @@ checkSurroundingCells(Board, Cell, Row, Col) :-
     %Cell #= 1, 
     ground(Cell),
     Cell == 1,
-    print('check'),nl,
+    %print('check'),nl,
     checkSurroundingCellsAux(Board, Row, Col).
 
 checkSurroundingCells(Board, Cell, Row, Col) :-
@@ -293,6 +293,88 @@ printLines([Line | Board]) :-
     nl,
     printLines(Board).
 
+spaces([]).
+spaces([L | List]) :-
+    countSpaces(L, Count),
+    Count #>0,
+    spaces(List).
+
+spacesDiags([L | List]) :-
+    noConsecutiveBlack(L),
+    spacesDiags(List).
+
+noConsecutiveBlack(List) :-
+    length(List, 1).
+
+noConsecutiveBlack([1 | List]) :-
+    nth1(1, List, Next),
+    Next #= 0,
+    noConsecutiveBlack(List).
+
+noConsecutiveBlack([0 | List]) :-
+    noConsecutiveBlack(List).
+
+getAllDiags(Coord, Diags) :-
+    getDiags(Coord, Diags1),
+    invert(Coord, Inverted),
+    getDiags(Inverted, Diags2),
+    append(Diags1, Diags2, Diags).
+
+getDiags(Coord, Diags) :-
+    getDiags1(Coord, 2, [], Diags1),
+    getDiags2(Coord, 1, [], Diags2),
+    append(Diags1, Diags2, Diags).
+
+getDiags1(Coord, Row, Aux, Diags) :-
+    length(Coord, Row),
+    Diags=Aux.
+
+getDiags1(Coord, Row, Aux, Diags) :-
+    getDiag1(Coord, Row, 1, [], Diag),
+    append(Aux, [Diag], NewAux),
+    NextRow is Row+1,
+    getDiags1(Coord, NextRow, NewAux, Diags).
+
+getDiag1(_Coord, 0, _Col, Aux, Aux).
+getDiag1(Coord, Row, Col, Aux, Diag) :-
+    getCell(Coord, Row, Col, Cell),
+    append(Aux, [Cell], NewAux),
+    NextRow is Row-1,
+    NextCol is Col+1,
+    getDiag1(Coord, NextRow, NextCol, NewAux, Diag).
+
+%---
+
+getDiags2(Coord, Col, Aux, Diags) :-
+    length(Coord, Col),
+    Diags=Aux.
+
+getDiags2(Coord, Col, Aux, Diags) :-
+    length(Coord, Row),
+    getDiag2(Coord, Col, Row, [], Diag),
+    append(Aux, [Diag], NewAux),
+    NextCol is Col+1,
+    getDiags2(Coord, NextCol, NewAux, Diags).
+
+getDiag2(Coord, Col, _Row, Aux, Aux) :-
+    length(Coord, N),
+    Col=:=N+1.
+getDiag2(Coord, Col, Row, Aux, Diag) :-
+    getCell(Coord, Row, Col, Cell),
+    append(Aux, [Cell], NewAux),
+    NextRow is Row-1,
+    NextCol is Col+1,
+    getDiag2(Coord, NextCol, NextRow, NewAux, Diag).
+
+invert(Coord, Inverted) :-
+    invert(Coord, Aux, Inverted).
+
+invert([], Aux, Aux).
+invert([L | Coord], Aux, Inverted) :-
+    reverse(L, LR),
+    append(Aux, [LR], NewAux),
+    invert(Coord, NewAux, Inverted).
+
 ant(Lines) :-
     Lines=[ [C11,C12,C13,C14,C15,C16,C17,C18,C19],
             [C21,C22,C23,C24,C25,C26,C27,C28,C29],
@@ -316,13 +398,11 @@ ant(Lines) :-
     nth1(8, Lines, Restr2),
     countSpaces(Restr2, Count2),
     Count2 #= 4,
-    print('BEFORE'),nl,
-    printLines(Lines),nl,
-    %maplist(checkSurroundingCells(Lines), Vars),
-    %printLines(Lines),nl,
     checkAllCells(Lines),
-    print('AFTER'),nl,
-    printLines(Lines),nl,
+    spaces(Lines),
+    spaces(Columns),
+    %getAllDiags(Lines, Diags),
+    %spacesDiags(Diags),
     labeling([], Vars),
     printLines(Lines).
 
