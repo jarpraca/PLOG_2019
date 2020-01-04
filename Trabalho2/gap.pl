@@ -394,7 +394,19 @@ getDiagonal([Row|Rest], Col, DCol, Result) :-
     ;  Result = []).
 
 getAllDiagonals(Board, Diags):-
-    getAllDiagonalsAux(Board,0, Diags).
+    getAllDiagonalsAux(Board,0, Diags1),
+    transpose(Board, Board2),
+    getAllDiagonalsAux(Board2,0, Diags2),
+    %reverse(Board, Board3),
+    %getAllDiagonalsAux(Board3,0, Diags3),
+    %print(Diags1),nl,
+    %print(Diags2),nl,
+    %print(Diags3),nl,
+    %append(Diags1,Diags2,DiagsTmp),
+    %append(DiagsTmp,Diags3,Diags),
+    append(Diags1, Diags2, Diags).
+    %print(Diags),nl.
+
 
 getAllDiagonalsAux(Board,9, Diags).
 
@@ -416,16 +428,26 @@ checkConsecutive([1]).
 checkConsecutive([]).
 
 checkConsecutive([Head|[HeadList|List]]):-
-    (Head \= 1 ; HeadList\= 1),
+    (Head == 1 ->
+        HeadList #= 0;
+        true
+    ),
     checkConsecutive([HeadList|List]).
 
 checkAllForConsecutives([]).
 
 checkAllForConsecutives([Head|List]):-
-    nl,nl,
-    print([Head|List]),nl,nl,
+    %nl,nl,
+    %print(Head),nl,nl,
     checkConsecutive(Head),
     checkAllForConsecutives(List).
+
+
+
+
+
+
+
 
 ant(Lines) :-
     Lines=[ [C11,C12,C13,C14,C15,C16,C17,C18,C19],
