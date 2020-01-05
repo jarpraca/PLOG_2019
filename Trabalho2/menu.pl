@@ -32,7 +32,8 @@ displayMenu :-
 /**
  * Parses menu option chosen and behaves accordingly:
  * 0 - Exit
- * 1 - Start Playing
+ * 1 - Create Puzzle
+ * 1 - Auto generate puzzle
  */
 parseOption(0) :-
     fail.
@@ -47,7 +48,10 @@ parseOption(1) :-
 parseOption(2) :-
     randomizePuzzle. 
 
-	
+
+/**
+ * Verifies if input size is acceptable
+ */	
 verifySize(Size):-
     Size > 8,
     Size < 11.

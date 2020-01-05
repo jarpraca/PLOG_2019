@@ -15,7 +15,9 @@ getPiece(Board, Row, Col, Piece) :-
  */
 
 
-
+/**
+ * Obtains a restrictions trough its index
+ */	
 checkRestsByIndex([],_Index):- fail.
 
 checkRestsByIndex([[RestsHeadIndex|_RestsHeadValue]|RestsTail],Index):-
@@ -24,7 +26,9 @@ checkRestsByIndex([[RestsHeadIndex|_RestsHeadValue]|RestsTail],Index):-
         checkRestsByIndex(RestsTail,Index) 
     ).
 
-
+/**
+ * Obtains the value of a restriction trough its value
+ */	
 getValueOfIndex([],_Index,_Rest):- fail.
 
 getValueOfIndex([[RestsHeadIndex,RestsHeadValue]|RestsTail],Index,Value):-
@@ -136,20 +140,10 @@ drawRow(Board, Row, RowRests, BoardSize) :-
 	NextRow is Row+1,
 	drawRow(Board, NextRow, RowRests, BoardSize).
 
-/**
- * Draws pieces of the list received
- */
-draw_pieces([]) :-
-	write('\n\n').
 
-draw_pieces([H|T]):-
-	getPieceString(H, X),	
-	print(X),
-	write(' '),
-    draw_pieces(T).
 
 /**
- * Draws Board (all rows, column and respective pieces)
+ * Draws Board (all rows, column and restrictions) 
  */
 drawBoard(Board,ColumnRests, RowRests) :-
     nl,

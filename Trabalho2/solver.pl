@@ -8,6 +8,9 @@ getCell(Board, Row, Col, Cell) :-
     nth1(Row, Board, Line),
     nth1(Col, Line, Cell).
 
+/**
+* Verifies that for every cell, its adjacent cells do not contain any pieces
+*/
 checkAllCells(Board) :-
     checkAllLines(Board, Board, 1).
 
@@ -21,44 +24,17 @@ checkAllLines(Board, [Line | Lines], Row) :-
 checkLine(_Board, [], _Row, _Col).
 
 checkLine(Board, [E | Line], Row, Col) :-
-    %format("~w ~w ~w", [Row, Col, E]),nl,
     checkSurroundingCells(Board, E, Row, Col),
     NextCol is Col+1,
     checkLine(Board, Line, Row, NextCol).
 
-% checkAllCells(Board, Row, Col)
-
-% checkAllCells(Board, Row, Col) :-
-%     getCell(Board, Row, Col, Cell),
-%     checkSurroundingCells(Board, Cell, Row, Col),
-    
-
-/**
-* Checks if a cell located in Row and Col is black and if its surroundings cells are all white
-*/
-
-
-% checkSurroundingCells(_Board, Vars, 0) :-
-%     getCell(Board, Row, Col, Cell),
-%     format("~w ~w ~w", [Row, Col, Cell]),nl,
-%     print(Vars),nl.
-
 
 checkSurroundingCells(Board, Cell, Row, Col) :-
-    % getCell(Board, Row, Col, Cell),
-    %nth1(Row, Board, Line),
-    %format("~w ~w ~w", [Row, Col, 1]),nl,
-    %Cell #= 1, 
     ground(Cell),
     Cell == 1,
-    %print('check'),nl,
     checkSurroundingCellsAux(Board, Row, Col).
 
 checkSurroundingCells(_Board, Cell,_Row,_Col) :-
-    % getCell(Board, Row, Col, Cell),
-    %nth1(Row, Board, Line),
-    %format("~w ~w ~w", [Row, Col, 1]),nl,
-    %Cell #= 1, 
     ground(Cell),
     Cell == 0.
 
@@ -68,8 +44,6 @@ checkSurroundingCells(Board, Cell, Row, Col) :-
         checkSurroundingCellsAux(Board, Row, Col);
         true
     ).
-
-%checkSurroundingCells(_Board, _Cell, _Row, _Col).
 
 checkSurroundingCellsAux(Board, 1, 1) :-
     Cell4Row is 1+1,
@@ -272,9 +246,6 @@ same_sum([X | R], Sum) :-
 /**
 * Counts the number of spaces between two black cells in a List
 */
-
-
-
 countSpaces([1 | List], Count) :-
     countSpacesAux(List, 0, Count).
 
@@ -296,11 +267,19 @@ printLines([Line | Board]) :-
     nl,
     printLines(Board).
 
+/**
+* Verifies that every line as two cells
+*/
 spaces([]).
 spaces([L | List]) :-
     countSpaces(L, Count),
     Count #>0,
     spaces(List).
+
+
+/**
+* Verifies that for every diagonal there arent more than two black pieces
+*/
 
 spacesDiags([L | List]) :-
     noConsecutiveBlack(L),
@@ -316,6 +295,11 @@ noConsecutiveBlack([1 | List]) :-
 
 noConsecutiveBlack([0 | List]) :-
     noConsecutiveBlack(List).
+
+
+/**
+* Obtains all diagonals
+*/
 
 getAllDiags(Coord, Diags) :-
     getDiags(Coord, Diags1),
@@ -346,7 +330,6 @@ getDiag1(Coord, Row, Col, Aux, Diag) :-
     NextCol is Col+1,
     getDiag1(Coord, NextRow, NextCol, NewAux, Diag).
 
-%---
 
 getDiags2(Coord, Col, Aux, Diags) :-
     length(Coord, Col),
@@ -379,12 +362,17 @@ invert([L | Coord], Aux, Inverted) :-
     append(Aux, [LR], NewAux),
     invert(Coord, NewAux, Inverted).
 
-/*Lucas came into action
+
+
+/**
+* Adds element to the end of a list
 */
-
-
 add_tail([],X,[X]).
 add_tail([H|T],X,[H|L]):-add_tail(T,X,L).
+
+/**
+* Obtains all diagonals
+*/
 
 getDiagonal([], _, _, []).
 getDiagonal([Row|Rest], Col, DCol, Result) :-
@@ -398,15 +386,7 @@ getAllDiagonals(Board, Diags):-
     getAllDiagonalsAux(Board,0, Diags1),
     transpose(Board, Board2),
     getAllDiagonalsAux(Board2,0, Diags2),
-    %reverse(Board, Board3),
-    %getAllDiagonalsAux(Board3,0, Diags3),
-    %print(Diags1),nl,
-    %print(Diags2),nl,
-    %print(Diags3),nl,
-    %append(Diags1,Diags2,DiagsTmp),
-    %append(DiagsTmp,Diags3,Diags),
     append(Diags1, Diags2, Diags).
-    %print(Diags),nl.
 
 
 getAllDiagonalsAux(_Board,9, _Diags).
@@ -419,9 +399,18 @@ getAllDiagonalsAux(Board,Index, Diags):-
     add_tail(NewDiags,DiagRight,IntDiags),
     add_tail(IntDiags,DiagLeft,Diags).
 
+
+/**
+* Prints a matrix
+*/
+
 printMatrix([]).
 printMatrix([H|T]) :- write(H), nl, printMatrix(T).
 
+
+/**
+* Checks for consecutive black pieces on a list
+*/
 
 checkConsecutive([0]).
 checkConsecutive([1]).
@@ -442,6 +431,10 @@ checkAllForConsecutives([Head|List]):-
     %print(Head),nl,nl,
     checkConsecutive(Head),
     checkAllForConsecutives(List).
+
+/**
+* Makes sure all border number restrictions are obeyed
+*/
 
 
 forceRests(Lines,ColumnRests, RowRests):-
@@ -483,7 +476,9 @@ forceRowLength([LinesHead|LinesTail],N):-
     forceRowLength(LinesTail,N).
     
 
-
+/**
+* Obtains Solution for board Lines
+*/
 getSolution(Lines,Size,ColumnRests, RowRests) :-
     length(Lines,Size),
     forceRowLength(Lines,Size),
@@ -500,8 +495,12 @@ getSolution(Lines,Size,ColumnRests, RowRests) :-
     spaces(Lines),
     spaces(Columns),
     checkAllForConsecutives(Diags),
-    %print(Diags),nl,
     labeling([], Vars).
+
+
+/**
+* Verifies if Lines is a solution for the restrictions imposed
+*/
 
 isSolution(Lines,[ColumnRestIndex,ColumnRestValue],[RowRestIndex,RowRestValue]):-
     transpose(Lines, Columns),

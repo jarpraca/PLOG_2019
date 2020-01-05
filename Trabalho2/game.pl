@@ -1,3 +1,7 @@
+
+/**
+ * Creates a puzzle of a given size and initiates the first mode of the app
+ */	
 createPuzzle(Size):-
     initialBoard(Size,Board,InitialColumnRests, InitialRowRests),
     drawBoard(Board,InitialColumnRests, InitialRowRests),
@@ -5,13 +9,17 @@ createPuzzle(Size):-
     drawBoard(Board,ColumnRests,RowRests),
     parseSolution(Board, ColumnRests, RowRests).
 
-
+/**
+ * Randomizes a puzzle and initiates the second mode of the app
+ */	
 randomizePuzzle:-
     randomBoard(_Size,Board,ColumnRests, RowRests),
     drawBoard(Board,ColumnRests,RowRests),
     parseSolution(Board, ColumnRests, RowRests).
 
-
+/**
+ * Asks user for the info about the restrictions to place on the board
+ */	
 parseRests(ColumnRests, RowRests):-
     write('How many column restrictions would you like to set? '),
     read(ColRestNum),
@@ -22,7 +30,9 @@ parseRests(ColumnRests, RowRests):-
     read(RowRestNum),
     parseRowRests(RowRestNum, RowRests).
 
-
+/**
+ * Asks user if he wants the solution
+ */	
 parseSolution(Board, ColumnRests, RowRests):-
     write('Would you like me to solve it for you? (y/n)'),
     read(Answer),
@@ -37,6 +47,10 @@ parseSolution(Board, ColumnRests, RowRests):-
             )   
     ).
 
+
+/**
+ * Asks user for the info on the desired restrictions
+ */	
 
 parseColRests(0, _ColRestList).
 
@@ -66,33 +80,4 @@ parseRowRests(RowRestNum, RowRestList):-
     add_tail(NewRowRestList,[Row,Value],RowRestList).
 
 
-
-
-/**
- * Asks the user for a row
- * Reads the row
- * Checks if the row is correct
- * Returns the row
- */
-parseRow(Board, Row, BoardSize) :-
-    write('In what row do you want to place the next piece?'),
-	read(RowSelected),
-    ((integer(RowSelected), RowSelected >= 1, RowSelected =< BoardSize) ->
-        Row = RowSelected;
-        (write('\nRow must be one of the numbers on the left of the board!\n'), parseRow(Board, Row, BoardSize))
-    ).
-
-/**
- * Asks the user for a column
- * Reads the column
- * Checks if the column is correct
- * Returns the column
- */
-parseColumn(Board, Col, BoardSize) :-
-    write('In what column do you want to place the next piece?'),
-	read(ColSelected),
-    ((column(ColSelected, ColNumber), ColNumber >= 1, ColNumber =< BoardSize) ->
-        Col = ColSelected;
-        (write('\nColumn must be one of the letters on top of the board!\n'), parseColumn(Board, Col, BoardSize))
-    ).
 
