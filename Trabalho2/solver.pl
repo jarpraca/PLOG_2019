@@ -503,22 +503,17 @@ getSolution(Lines,Size,ColumnRests, RowRests) :-
 * Verifies if Lines is a solution for the restrictions imposed
 */
 
-isSolution(Lines,[ColumnRestIndex,ColumnRestValue],[RowRestIndex,RowRestValue]):-
+isSolution(Lines,ColumnRests, RowRests):-
     transpose(Lines, Columns),
-    %getAllDiags(Lines, Diags),
+    getAllDiagonals(Lines, Diags),
     append(Lines, Vars),
     domain(Vars, 0, 1),
     % constraints
     same_sum(Lines, Sum),
     same_sum(Columns, Sum),
     Sum #= 2,
-    nth1(ColumnRestIndex, Columns, Restr1),
-    countSpaces(Restr1, Count1),
-    Count1 #= ColumnRestValue,
-    nth1(RowRestIndex, Lines, Restr2),
-    countSpaces(Restr2, Count2),
-    Count2 #= RowRestValue,
-    checkAllCells(Lines),
+    forceRests(Lines,ColumnRests, RowRests),
+    %checkAllCells(Lines),
     spaces(Lines),
     spaces(Columns).
-    %checkAllForConsecutives(Diags).
+    checkAllForConsecutives(Diags).
