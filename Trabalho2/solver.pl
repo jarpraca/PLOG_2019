@@ -487,7 +487,7 @@ getSolution(Lines,Size,ColumnRests, RowRests) :-
     length(Lines,Size),
     forceRowLength(Lines,Size),
     transpose(Lines, Columns),
-    getAllDiags(Lines, Diags),
+    getAllDiagonals(Lines, Diags),
     append(Lines, Vars),
     domain(Vars, 0, 1),
     % constraints
