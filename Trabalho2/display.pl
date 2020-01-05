@@ -53,10 +53,15 @@ draw_column_header(N,Size,ColumnRests):-
  * Writes row number
  */
 draw_row_number(N, RowRests):-
-    
-    (checkRestsByIndex(RowRests,N)  ->
-        (write(' '),getValueOfIndex(RowRests,N,RowRestValue), write(N),write('-'),write(RowRestValue),write(' '));
-        (write('  '),write(N),write('  '))
+    (N < 10 ->
+        (checkRestsByIndex(RowRests,N)  ->
+            (write(' '),getValueOfIndex(RowRests,N,RowRestValue), write(N),write('-'),write(RowRestValue),write(' '));
+            (write('  '),write(N),write('  '))
+        );
+        (checkRestsByIndex(RowRests,N)  ->
+            (getValueOfIndex(RowRests,N,RowRestValue), write(N),write('-'),write(RowRestValue),write(' '));
+            (write(' '),write(N),write('  '))
+        )
     ).
 
 /**
@@ -113,20 +118,27 @@ drawBottomDash(BoardSize):-
 /**
  * Draws all rows of Board and its internal separators
  */
-drawRow( _Board, BoardSize, RowRest, BoardSize).
-
-drawRow(Board, Row, RowRest, BoardSize) :-
-    Row < BoardSize,
+drawRow( _Board, BoardSize, RowRests, BoardSize):-
     write('     |'),
     drawMidDash(BoardSize),
-	draw_row_number(Row, RowRest),
+	draw_row_number(BoardSize, RowRests),
+	write('|'),
+    drawColumn(Board, Row, BoardSize, BoardSize),
+    write('\n     |'),    
+	%write('     |_____|_____|_____|_____|\n'),
+    drawBottomDash(BoardSize).
+
+drawRow(Board, Row, RowRests, BoardSize) :-
+    write('     |'),
+    drawMidDash(BoardSize),
+	draw_row_number(Row, RowRests),
 	write('|'),
     drawColumn(Board, Row, BoardSize, BoardSize),
     write('\n     |'),    
 	%write('     |_____|_____|_____|_____|\n'),
     drawBottomDash(BoardSize),
 	NextRow is Row+1,
-	drawRow(Board, NextRow, RowRest, BoardSize).
+	drawRow(Board, NextRow, RowRests, BoardSize).
 
 /**
  * Draws Player name
@@ -160,13 +172,13 @@ draw_player(Board, Player):-
 /**
  * Draws Board (all rows, column and respective pieces)
  */
-drawBoard(Board,ColumnRests, RowRest) :-
+drawBoard(Board,ColumnRests, RowRests) :-
     nl,
     length(Board, BoardSize),
     write('     '),
 	draw_column_header(BoardSize,BoardSize, ColumnRests),nl,
 	draw_separator(BoardSize),
-	drawRow(Board, 1, RowRest, BoardSize),
+	drawRow(Board, 1, RowRests, BoardSize),
 	nl.
 
 

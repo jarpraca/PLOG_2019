@@ -29,7 +29,7 @@ getRest([ColumnRestHead,ColumnRestTail], [RowRestHead,RowRestTail],N):-
     RowRestHead is RowRestIndex,
     RowRestTail is RowRestValue.*/
 
-initialBoard(N,Board,[0,0], [0,0]):-
+initialBoard(N,Board,[[0,0]], [[0,0]]):-
     %getRest(ColumnRest, RowRest,N),
     %print('ColumnRest: '),
     %print(ColumnRest),nl,
@@ -54,6 +54,7 @@ column(f,6).
 column(g,7).
 column(h,8).
 column(i,9).
+column(j,10).
 
 /**
  * Existing levels

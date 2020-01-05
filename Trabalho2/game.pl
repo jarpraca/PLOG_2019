@@ -1,6 +1,6 @@
 createPuzzle(Size):-
-    initialBoard(Size,Board,ColumnRest, RowRest),
-    drawBoard(Board,ColumnRest, RowRest),
+    initialBoard(Size,Board,InitialColumnRests, InitialRowRests),
+    drawBoard(Board,InitialColumnRests, InitialRowRests),
     parseRests(ColumnRests, RowRests),nl,
     drawBoard(Board,ColumnRests,RowRests),
     parseSolution(Board, ColumnRests, RowRests).
