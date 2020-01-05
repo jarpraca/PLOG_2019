@@ -1,7 +1,3 @@
-
-:- consult('data.pl').
-:- consult('display.pl').
-
 /**
  * Draws game menu
  */
@@ -16,40 +12,19 @@ displayMenu :-
     write('|  XX     XX  xx  xx  xxxxxx  XX      x    x   x     x   x x     |'),nl,
     write('|  XXXXXXXXX  xxxxxx  x       XX      xxxxxx xxxxx xxxxx x xxxxx |'),nl,
     write('|                     x                                          |'),nl,
-    write('|                                                                |'),nl,
-    write('|                                                                |'),nl,
-    write('|                                                                |'),nl,
     write('|                  ____________________________                  |'),nl,
     write('|                 |     |                      |                 |'),nl,
-    write('|                 |  1  |        Play          |                 |'),nl,
+    write('|                 |  1  |    Create Puzzle     |                 |'),nl,
     write('|                 |_____|______________________|                 |'),nl,
     write('|                 |     |                      |                 |'),nl,
     write('|                 |  0  |        Exit          |                 |'),nl,
     write('|                 |_____|______________________|                 |'),nl,
     write('|                                                                |'),nl,
     write('|                                                                |'),nl,
-    write('|                                                                |'),nl,
-    write('|                                                                |'),nl,
-    write('|                                                                |'),nl,
-    write('|                                                                |'),nl,
-    write('|                                                                |'),nl,
     write('|             Developed by: Joao Praca, Lucas Ribeiro            |'),nl,
     write('|________________________________________________________________|'),nl.
 
-/**
- * Draws computer levels
- */
-displayLevels :-
-    write('   _____ ______________________ '),nl,
-    write('  |     |                      |'),nl,
-    write('  |  1  |         Easy         |'),nl,
-    write('  |_____|______________________|'),nl,
-    write('  |     |                      |'),nl,
-    write('  |  2  |        Medium        |'),nl,
-    write('  |_____|______________________|'),nl,
-    write('  |     |                      |'),nl,
-    write('  |  3  |         Hard         |'),nl,
-    write('  |_____|______________________|'),nl.
+
 
 /**
  * Parses menu option chosen and behaves accordingly:
@@ -60,10 +35,16 @@ parseOption(0) :-
     fail.
 
 parseOption(1) :-
-    choose_level(Level),
-    format("~nYou chose level: ~w", [Level]).
-	
+    chooseSize(Size),
+    (verifySize(Size) ->
+        (format("~nYou chose size: ~wx~w", [Size,Size]),createPuzzle(Size));
+        (write('Size should be either 9 or 10\n'),parseOption(1))
+    ).
 
+	
+verifySize(Size):-
+    Size > 8,
+    Size < 11.
 
 /**
  * Parses replay option chosen and behaves accordingly
@@ -88,14 +69,9 @@ replay :-
  * Displays levels
  * Asks user what level he wants for the respective computer player
  */
-choose_level(Level) :-
-    displayLevels,
-    write("~nChoose the puzzles level of difficulty: "),
-    read(Level),
-    (level(Level) ->
-        true;
-        (write("\nLevel must be 1, 2 or 3!\n"), choose_level(Level))
-    ).
+chooseSize(Size) :-
+    write('Choose the puzzles size: '),
+    read(Size).
 
 /**
  * Displays menu
