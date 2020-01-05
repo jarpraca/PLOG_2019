@@ -34,9 +34,6 @@ getValueOfIndex([[RestsHeadIndex,RestsHeadValue]|RestsTail],Index,Value):-
     ).
 
 
-
-
-
 draw_column_header(0,Size,ColumnRests).
 
 draw_column_header(N,Size,ColumnRests):-
@@ -78,9 +75,6 @@ draw_separatorAux(BoardSize):-
     write('_____ '),
     NewBoardSize is BoardSize-1,
     draw_separatorAux(NewBoardSize).
-
-
-
 
 /**
  * Draws all pieces of a Row using Col to find each piece in Board
@@ -141,14 +135,6 @@ drawRow(Board, Row, RowRests, BoardSize) :-
 	drawRow(Board, NextRow, RowRests, BoardSize).
 
 /**
- * Draws Player name
- */
-draw_name(Player):-
-	playerName(Player, PlayerName),
-	print(PlayerName),
-	write('\n').
-
-/**
  * Draws pieces of the list received
  */
 draw_pieces([]) :-
@@ -161,15 +147,6 @@ draw_pieces([H|T]):-
     draw_pieces(T).
 
 /**
- * Draws Player name and its remaining pieces
- */
-draw_player(Board, Player):-
-	getPiecesPlayer(Board, Player, Pieces),
-	draw_name(Player),
-	write('Pieces : '),
-	draw_pieces(Pieces).
-
-/**
  * Draws Board (all rows, column and respective pieces)
  */
 drawBoard(Board,ColumnRests, RowRests) :-
@@ -180,5 +157,3 @@ drawBoard(Board,ColumnRests, RowRests) :-
 	draw_separator(BoardSize),
 	drawRow(Board, 1, RowRests, BoardSize),
 	nl.
-
-
