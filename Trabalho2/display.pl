@@ -112,11 +112,11 @@ drawBottomDash(BoardSize):-
 /**
  * Draws all rows of Board and its internal separators
  */
-drawRow( _Board, BoardSize, RowRests, BoardSize):-
+drawRow( Board, BoardSize, RowRests, BoardSize):-
     write('     |'),
     drawMidDash(BoardSize),
 	draw_row_number(BoardSize, RowRests),
-	write('|'),
+    write('|'),
     drawColumn(Board, BoardSize, BoardSize, BoardSize),
     write('\n     |'),    
 	%write('     |_____|_____|_____|_____|\n'),

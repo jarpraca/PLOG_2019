@@ -63,7 +63,8 @@ randomBoard(Size,Board,ColumnRests, RowRests):-
     random(1,3,NumberOfColumnRests),
     random(1,3,NumberOfRowRests),
     getRandomRests(ColumnRests,NumberOfColumnRests,Size),
-    getRandomRests(RowRests,NumberOfRowRests,Size).
+    getRandomRests(RowRests,NumberOfRowRests,Size),
+    print(Board),nl.
     
 
 

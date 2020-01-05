@@ -8,8 +8,8 @@ createPuzzle(Size):-
 
 randomizePuzzle:-
     randomBoard(Size,Board,ColumnRests, RowRests),
-    %print(Board),nl,print(ColumnRests),nl,print(RowRests),nl,
     drawBoard(Board,ColumnRests,RowRests),
+    print('BOARD: '),nl,print(Board),nl,print(ColumnRests),nl,print(RowRests),nl,
     parseSolution(Board, ColumnRests, RowRests).
 
 
