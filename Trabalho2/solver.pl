@@ -54,7 +54,7 @@ checkSurroundingCells(Board, Cell, Row, Col) :-
     %print('check'),nl,
     checkSurroundingCellsAux(Board, Row, Col).
 
-checkSurroundingCells(Board, Cell, Row, Col) :-
+checkSurroundingCells(_Board, Cell,_Row,_Col) :-
     % getCell(Board, Row, Col, Cell),
     %nth1(Row, Board, Line),
     %format("~w ~w ~w", [Row, Col, 1]),nl,
@@ -362,6 +362,7 @@ getDiags2(Coord, Col, Aux, Diags) :-
 getDiag2(Coord, Col, _Row, Aux, Aux) :-
     length(Coord, N),
     Col=:=N+1.
+
 getDiag2(Coord, Col, Row, Aux, Diag) :-
     getCell(Coord, Row, Col, Cell),
     append(Aux, [Cell], NewAux),
@@ -370,7 +371,7 @@ getDiag2(Coord, Col, Row, Aux, Diag) :-
     getDiag2(Coord, NextCol, NextRow, NewAux, Diag).
 
 invert(Coord, Inverted) :-
-    invert(Coord, Aux, Inverted).
+    invert(Coord, _Aux, Inverted).
 
 invert([], Aux, Aux).
 invert([L | Coord], Aux, Inverted) :-
@@ -408,7 +409,7 @@ getAllDiagonals(Board, Diags):-
     %print(Diags),nl.
 
 
-getAllDiagonalsAux(Board,9, Diags).
+getAllDiagonalsAux(_Board,9, _Diags).
 
 getAllDiagonalsAux(Board,Index, Diags):-
     getDiagonal(Board, Index,1,DiagRight),
@@ -447,13 +448,13 @@ forceRests(Lines,ColumnRests, RowRests):-
     forceColRests(Lines,ColumnRests),
     forceRowRests(Lines,RowRests).
 
-forceColRests(Lines,[]).
+forceColRests(_Lines,[]).
 
 forceColRests(Lines,[ColumnRestsHead|ColumnRestsTail]):-
     forceColRest(Lines,ColumnRestsHead),
     forceColRests(Lines,ColumnRestsTail).
 
-forceRowRests(Lines,[]).
+forceRowRests(_Lines,[]).
 
 
 forceRowRests(Lines,[RowRestsHead|RowRestsTail]):-
@@ -475,7 +476,7 @@ forceRowRest(Lines,[RowRestIndex,RowRestValue]):-
     Count2 #= RowRestValue.
 
 
-forceRowLength([],N).
+forceRowLength([],_N).
 
 forceRowLength([LinesHead|LinesTail],N):-
     length(LinesHead, N),
@@ -500,8 +501,7 @@ getSolution(Lines,Size,ColumnRests, RowRests) :-
     spaces(Columns),
     checkAllForConsecutives(Diags),
     %print(Diags),nl,
-    labeling([], Vars),
-    printLines(Lines).
+    labeling([], Vars).
 
 isSolution(Lines,[ColumnRestIndex,ColumnRestValue],[RowRestIndex,RowRestValue]):-
     transpose(Lines, Columns),

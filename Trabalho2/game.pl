@@ -7,9 +7,8 @@ createPuzzle(Size):-
 
 
 randomizePuzzle:-
-    randomBoard(Size,Board,ColumnRests, RowRests),
+    randomBoard(_Size,Board,ColumnRests, RowRests),
     drawBoard(Board,ColumnRests,RowRests),
-    print('BOARD: '),nl,print(Board),nl,print(ColumnRests),nl,print(RowRests),nl,
     parseSolution(Board, ColumnRests, RowRests).
 
 
@@ -29,7 +28,7 @@ parseSolution(Board, ColumnRests, RowRests):-
     read(Answer),
     (
         Answer == 'y' ->
-            (write('Very Well, heres the solution'),nl,length(Board,Size),time_out(getSolution(Solution, Size, ColumnRests, RowRests),2000,X),(\+ground(Solution)->write('Solution couldnt be found!\n');drawBoard(Solution,ColumnRests,RowRests)));
+            (write('Very Well, heres the solution'),nl,length(Board,Size),time_out(getSolution(Solution, Size, ColumnRests, RowRests),2000,_X),(\+ground(Solution)->write('Solution couldnt be found!\n');drawBoard(Solution,ColumnRests,RowRests)));
             (
                 Answer == 'n' ->
                     (write('Very Well,'),replay);
@@ -39,7 +38,7 @@ parseSolution(Board, ColumnRests, RowRests):-
     ).
 
 
-parseColRests(0, ColRestList).
+parseColRests(0, _ColRestList).
 
 parseColRests(ColRestNum, ColRestList):-
     write('In what column would you like to set the restriction? '),
@@ -53,7 +52,7 @@ parseColRests(ColRestNum, ColRestList):-
     add_tail(NewColRestList,[Column,Value],ColRestList).
 
 
-parseRowRests(0, RowRestList).
+parseRowRests(0, _RowRestList).
 
 parseRowRests(RowRestNum, RowRestList):-
     nl,
@@ -66,33 +65,6 @@ parseRowRests(RowRestNum, RowRestList):-
     parseRowRests(NewRowRestNum,NewRowRestList),
     add_tail(NewRowRestList,[Row,Value],RowRestList).
 
-
-/**
- * Game loop:
- * Displays Board
- * Moves piece for current player
- * Checks if current player won
- * If so, displays winner
- * Else, switches player and plays next round
- */
-play_round(Board,ColumnRest, RowRest) :-
-	movePiece(Board, ColumnRest, RowRest, NewBoard),
-	(isSolution(NewBoard,ColumnRest, RowRest) ->
-		(drawBoard(Board,ColumnRest, RowRest),displayWinner);
-		(drawBoard(Board,ColumnRest, RowRest), play_round(NewBoard,ColumnRest, RowRest))
-    ).
-
-
-
-
-movePiece(Board, NewBoard,ColumnRest, RowRest) :-
-    length(Board, BoardSize),
-	parseRow(Board, Row, BoardSize),
-	parseColumn(Board, Col, BoardSize),
-	(verifyMove(Board, Row, Col,ColumnRest, RowRest) ->
-		(move([Row, Col, Piece], Board, NB), NewBoard = NB);
-		movePiece(p, Board, NewBoard, Level)
-	).
 
 
 
@@ -124,75 +96,3 @@ parseColumn(Board, Col, BoardSize) :-
         (write('\nColumn must be one of the letters on top of the board!\n'), parseColumn(Board, Col, BoardSize))
     ).
 
-
-/**
- * Verifies if a move is valid, meaning the cell is empty and there isn't an opposite piece in the same row, column or quadrant
- * Prints error if any of the previous constrains fails
- */
-verifyMove(Board, Row, Col,ColumnRest, RowRest) :- 
-    (verifyEmptyCell(Board, Row, Col) ->
-        true;
-        (write('\nThis cell already has a piece!\n'), fail)
-    ),
-    (verifyRow(Board, Row, Col) ->
-        true;
-        (write('\nThis row already has two pieces!\n'), fail)
-    ),
-    (verifyColumn(Board, Row, Col) ->
-        true;
-        (write('\nThis column already has two pieces!\n'), fail)
-    ),
-    (verifySurroundings(Board, Row, Col) ->
-        true;
-        (write('\nTheres a piece in the cells surrouding the selected one!\n'), fail)
-    ).
-
-verifyEmptyCell(Board, Row, Col):-
-    getCell(Board,Row,Col,Cell),
-    (
-        Cell == 1 ->
-            fail;
-        true
-    ).
-
-getSum([], 0).
-getSum([H|T], Sum):-
-    getSum(T, X),
-    Sum is X + H.
-
-verifyRow(Board, Row, Col):-
-    nth1(Row, Board, Line),
-    getSum(Line, Sum),
-    (
-        Sum == 2 ->
-            fail;
-        true
-    ).
-
-verifyColumn(Board, Row, Col):-
-    transpose(Board, Columns),
-    nth1(Col, Columns, Column),
-    getSum(Column, Sum),
-    (
-        Sum == 2 ->
-            fail;
-        true
-    ).
-
-verifySurroundings(Board, Row, Col):-
-    transpose(Board, Columns),
-    %getAllDiags(Board, Diags),
-    checkAllForConsecutives(Board),
-    checkAllForConsecutives(Columns).
-    %checkAllForConsecutives(Diags).
-
-verifyRests(Board, Row, Col, [RowRestIndex,RowRestValue], [ColumnRestIndex,ColumnRestValue]):-
-    transpose(Board, Columns),
-    nth1(ColumnRestIndex, Columns, Restr1),
-    countSpaces(Restr1, Count1),
-    Count1 #= ColumnRestValue,
-    nth1(RowRestIndex, Board, Restr2),
-    countSpaces(Restr2, Count2),
-    Count2 #= RowRestValue.
-    
-    

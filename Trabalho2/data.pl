@@ -3,7 +3,7 @@
  * Initial empty Board
  */
 
-getLine(0,Line).
+getLine(0,_Line).
 
 getLine(N, Line):-
     NewN is N-1,
@@ -11,7 +11,7 @@ getLine(N, Line):-
     add_tail(NewLine,0,Line).
 
 
-initialBoardAux(0,Line,Board).
+initialBoardAux(0,_Line,_Board).
 
 initialBoardAux(N,Line,Board):-
     NewN is N-1,
@@ -63,8 +63,7 @@ randomBoard(Size,Board,ColumnRests, RowRests):-
     random(1,3,NumberOfColumnRests),
     random(1,3,NumberOfRowRests),
     getRandomRests(ColumnRests,NumberOfColumnRests,Size),
-    getRandomRests(RowRests,NumberOfRowRests,Size),
-    print(Board),nl.
+    getRandomRests(RowRests,NumberOfRowRests,Size).
     
 
 

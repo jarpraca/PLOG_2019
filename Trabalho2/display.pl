@@ -16,16 +16,16 @@ getPiece(Board, Row, Col, Piece) :-
 
 
 
-checkRestsByIndex([],Index):- fail.
+checkRestsByIndex([],_Index):- fail.
 
-checkRestsByIndex([[RestsHeadIndex|RestsHeadValue]|RestsTail],Index):-
+checkRestsByIndex([[RestsHeadIndex|_RestsHeadValue]|RestsTail],Index):-
     (RestsHeadIndex == Index ->
         true;
         checkRestsByIndex(RestsTail,Index) 
     ).
 
 
-getValueOfIndex([],Index,Rest):- fail.
+getValueOfIndex([],_Index,_Rest):- fail.
 
 getValueOfIndex([[RestsHeadIndex,RestsHeadValue]|RestsTail],Index,Value):-
     (RestsHeadIndex == Index ->
@@ -34,7 +34,7 @@ getValueOfIndex([[RestsHeadIndex,RestsHeadValue]|RestsTail],Index,Value):-
     ).
 
 
-draw_column_header(0,Size,ColumnRests).
+draw_column_header(0,_Size,_ColumnRests).
 
 draw_column_header(N,Size,ColumnRests):-
     Index is (Size - N + 1),
@@ -79,7 +79,7 @@ draw_separatorAux(BoardSize):-
 /**
  * Draws all pieces of a Row using Col to find each piece in Board
  */
-drawColumn(_Board, _Row, 0, BoardSize).
+drawColumn(_Board, _Row, 0, _BoardSize).
 
 drawColumn(Board, Row, Col, BoardSize) :-
     write('  '),
