@@ -84,7 +84,6 @@ drawColumn(_Board, _Row, 0, BoardSize).
 drawColumn(Board, Row, Col, BoardSize) :-
 	write('  '),
     column(ColLetter, Col),
-    print(Board),
 	getPiece(Board, Row, ColLetter, Piece),
     getPieceString(Piece, String),
     write(Piece),
