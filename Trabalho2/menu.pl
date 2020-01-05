@@ -77,7 +77,6 @@ replay :-
 
 /**
  * Displays levels
- * Asks user what level he wants for the respective computer player
  */
 chooseSize(Size) :-
     write('Choose the puzzles size(9-10): '),
@@ -85,7 +84,6 @@ chooseSize(Size) :-
 
 /**
  * Displays menu
- * Asks user which game option he wants to play (P vs P, P vs C, C vs C, exit)
  */
 menu :-
 	displayMenu,
