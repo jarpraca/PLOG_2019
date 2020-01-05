@@ -80,7 +80,7 @@ replay :-
  * Asks user what level he wants for the respective computer player
  */
 chooseSize(Size) :-
-    write('Choose the puzzles size: '),
+    write('Choose the puzzles size(9-10): '),
     read(Size).
 
 /**
