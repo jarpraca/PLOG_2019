@@ -86,7 +86,6 @@ drawColumn(Board, Row, Col, BoardSize) :-
     column(ColLetter, Col),
 	getPiece(Board, Row, ColLetter, Piece),
     getPieceString(Piece, String),
-    write(Piece),
 	write(String),
 	write('  |'),
 	NextCol is Col-1,
