@@ -1,6 +1,3 @@
-:- use_module(library(clpfd)).
-:- use_module(library(lists)).
-
 /**
 * Gets the Cell from Board located in Row and Col
 */
@@ -480,6 +477,7 @@ forceRowLength([LinesHead|LinesTail],N):-
 * Obtains Solution for board Lines
 */
 getSolution(Lines,Size,ColumnRests, RowRests) :-
+    statistics(walltime, [Start,_]),
     length(Lines,Size),
     forceRowLength(Lines,Size),
     transpose(Lines, Columns),
@@ -495,7 +493,10 @@ getSolution(Lines,Size,ColumnRests, RowRests) :-
     spaces(Lines),
     spaces(Columns),
     checkAllForConsecutives(Diags),
-    labeling([], Vars).
+    labeling([], Vars),
+    statistics(walltime, [End,_]),
+	Time is End - Start,
+    format(' > Duration: ~3d s~n', [Time]).
 
 
 /**

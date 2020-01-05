@@ -38,7 +38,7 @@ parseSolution(Board, ColumnRests, RowRests):-
     read(Answer),
     (
         Answer == 'y' ->
-            (write('Very Well, heres the solution'),nl,length(Board,Size),time_out(getSolution(Solution, Size, ColumnRests, RowRests),2000,_X),(\+ground(Solution)->write('Solution couldnt be found!\n');drawBoard(Solution,ColumnRests,RowRests)));
+            (write('Very Well, heres the solution'),nl,length(Board,Size),time_out(getSolution(Solution, Size, ColumnRests, RowRests),7000,_X),(\+ground(Solution)->write('Solution couldnt be found!\n');drawBoard(Solution,ColumnRests,RowRests)));
             (
                 Answer == 'n' ->
                     (write('Very Well,'),replay);
