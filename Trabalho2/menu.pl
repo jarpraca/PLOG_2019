@@ -17,6 +17,9 @@ displayMenu :-
     write('|                 |  1  |    Create Puzzle     |                 |'),nl,
     write('|                 |_____|______________________|                 |'),nl,
     write('|                 |     |                      |                 |'),nl,
+    write('|                 |  2  |   Randomize Puzzle   |                 |'),nl,
+    write('|                 |_____|______________________|                 |'),nl,
+    write('|                 |     |                      |                 |'),nl,
     write('|                 |  0  |        Exit          |                 |'),nl,
     write('|                 |_____|______________________|                 |'),nl,
     write('|                                                                |'),nl,
@@ -40,6 +43,9 @@ parseOption(1) :-
         (format("~nYou chose size: ~wx~w", [Size,Size]),createPuzzle(Size));
         (write('Size should be either 9 or 10\n'),parseOption(1))
     ).
+
+parseOption(2) :-
+    randomizePuzzle. 
 
 	
 verifySize(Size):-

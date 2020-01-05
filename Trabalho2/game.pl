@@ -6,6 +6,13 @@ createPuzzle(Size):-
     parseSolution(Board, ColumnRests, RowRests).
 
 
+randomizePuzzle:-
+    randomBoard(Size,Board,ColumnRests, RowRests),
+    %print(Board),nl,print(ColumnRests),nl,print(RowRests),nl,
+    drawBoard(Board,ColumnRests,RowRests),
+    parseSolution(Board, ColumnRests, RowRests).
+
+
 parseRests(ColumnRests, RowRests):-
     write('How many column restrictions would you like to set? '),
     read(ColRestNum),
@@ -22,7 +29,7 @@ parseSolution(Board, ColumnRests, RowRests):-
     read(Answer),
     (
         Answer == 'y' ->
-            (write('Very Well, heres the solution'),nl,getSolution(Solution, ColumnRests, RowRests),drawBoard(Solution,ColumnRests,RowRests));
+            (write('Very Well, heres the solution'),nl,length(Board,Size),time_out(getSolution(Solution, Size, ColumnRests, RowRests),2000,X),(\+ground(Solution)->write('Solution couldnt be found!\n');drawBoard(Solution,ColumnRests,RowRests)));
             (
                 Answer == 'n' ->
                     (write('Very Well,'),replay);

@@ -83,9 +83,11 @@ drawColumn(_Board, _Row, 0, BoardSize).
 
 drawColumn(Board, Row, Col, BoardSize) :-
 	write('  '),
-	column(ColLetter, Col),
+    column(ColLetter, Col),
+    print(Board),
 	getPiece(Board, Row, ColLetter, Piece),
-	getPieceString(Piece, String),
+    getPieceString(Piece, String),
+    write(Piece),
 	write(String),
 	write('  |'),
 	NextCol is Col-1,
@@ -117,7 +119,7 @@ drawRow( _Board, BoardSize, RowRests, BoardSize):-
     drawMidDash(BoardSize),
 	draw_row_number(BoardSize, RowRests),
 	write('|'),
-    drawColumn(Board, Row, BoardSize, BoardSize),
+    drawColumn(Board, BoardSize, BoardSize, BoardSize),
     write('\n     |'),    
 	%write('     |_____|_____|_____|_____|\n'),
     drawBottomDash(BoardSize).

@@ -38,7 +38,33 @@ initialBoard(N,Board,[[0,0]], [[0,0]]):-
     getLine(N,Line),
     initialBoardAux(N,Line,Board).
 
+getRandomRest([RestsIndex,RestsValue],Size):-
+    random(1,Size,RestsIndex),
+    MaxValue is Size - 1, 
+    random(2, MaxValue, RestsValue).
 
+
+getRandomRests([Rests],1,Size):-
+    getRandomRest(Rests,Size).
+
+getRandomRests([RestsHead|RestsTail],Number,Size):-
+    getRandomRest(RestsHead,Size),
+    NewNumber is Number - 1,
+    getRandomRests(RestsTail,NewNumber,Size).
+
+
+
+
+
+randomBoard(Size,Board,ColumnRests, RowRests):-
+    random(9,11,Size),
+    length(Board,Size),
+    forceRowLength(Board,Size),
+    random(1,3,NumberOfColumnRests),
+    random(1,3,NumberOfRowRests),
+    getRandomRests(ColumnRests,NumberOfColumnRests,Size),
+    getRandomRests(RowRests,NumberOfRowRests,Size).
+    
 
 
 
