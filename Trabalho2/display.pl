@@ -82,8 +82,10 @@ draw_separatorAux(BoardSize):-
 drawColumn(_Board, _Row, 0, BoardSize).
 
 drawColumn(Board, Row, Col, BoardSize) :-
-	write('  '),
-    column(ColLetter, Col),
+    write('  '),
+    length(Board, BoardSize),
+    AcCol is BoardSize - Col + 1, 
+    column(ColLetter, AcCol),
 	getPiece(Board, Row, ColLetter, Piece),
     getPieceString(Piece, String),
 	write(String),
