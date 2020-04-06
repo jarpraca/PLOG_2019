@@ -15,7 +15,7 @@ createPuzzle(Size):-
 randomizePuzzle:-
     randomBoard(_Size,Board,ColumnRests, RowRests),
     drawBoard(Board,ColumnRests,RowRests),
-    parseSolution(Board, ColumnRests, RowRests).
+    parseSolutionRandom(Board, ColumnRests, RowRests).
 
 /**
  * Asks user for the info about the restrictions to place on the board
@@ -34,6 +34,27 @@ parseRests(ColumnRests, RowRests):-
  * Asks user if he wants the solution
  */	
 parseSolution(Board, ColumnRests, RowRests):-
+    write('Would you like me to solve it for you? (y/n)'),
+    read(Answer),
+    (
+        Answer == 'y' ->
+            (
+                write('Very Well, heres the solution'),nl,
+                length(Board,Size),
+                getSolution(Solution, Size, ColumnRests, RowRests),
+                (\+ground(Solution)->
+                    (write('Solution couldnt be found!\n'), randomizePuzzle);
+                    drawBoard(Solution,ColumnRests,RowRests)
+                )
+            );
+            (
+                Answer == 'n' ->
+                    (write('Very Well,'),replay);
+                (write('Unrecognized input, try again.'),nl,parseSolution(Board, ColumnRests, RowRests))            
+            )   
+    ).
+
+parseSolutionRandom(Board, ColumnRests, RowRests):-
     write('Would you like me to solve it for you? (y/n)'),
     read(Answer),
     (
